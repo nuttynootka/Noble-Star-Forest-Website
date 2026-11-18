@@ -4,8 +4,6 @@ import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "r
 import { PREVIEW_SPECIMENS, fetchStorefrontTrees } from "@/lib/trees-api";
 import type { TreeSpecimen } from "@/lib/types";
 import { SpecimenCard, type SpecimenProportion } from "./SpecimenCard";
-import { useRef } from "react";
-import { TreeExpansion } from "./TreeExpansion";
 
 function proportionFor(index: number): SpecimenProportion {
   const mod = index % 4;
@@ -27,8 +25,7 @@ export function StatementCollection() {
   const [source, setSource] = useState<"live" | "preview">("preview");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const cardRefs = useRef<Record<string, HTMLElement | null>>({});
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -37,9 +34,9 @@ export function StatementCollection() {
       setTrees(res.trees);
       setSource(res.source);
       const q = new URLSearchParams(window.location.search).get("tree");
-      if (q && res.trees.some((t) => t.id === q || t.slug === q)) {
+      if (q) {
         const match = res.trees.find((t) => t.id === q || t.slug === q);
-        if (match) setActiveId(match.id);
+        if (match) setExpandedId(match.id);
       }
     });
     return () => { alive = false; };
@@ -49,21 +46,20 @@ export function StatementCollection() {
     setFavorites((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   }, []);
 
+  const selectAndScroll = useCallback((id: string) => {
+    setExpandedId((prev) => (prev === id ? null : id));
+    window.setTimeout(() => {
+      document.getElementById(`specimen-${id}`)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 60);
+  }, []);
+
   const visibleTrees = useMemo(
     () => (favoritesOnly ? trees.filter((t) => favorites.includes(t.id)) : trees),
     [trees, favoritesOnly, favorites],
   );
 
-  const activeIdx = visibleTrees.findIndex((t) => t.id === activeId);
-  const activeSpecimen = activeIdx >= 0 ? visibleTrees[activeIdx] : null;
-  const step = (delta: number) => {
-    if (!visibleTrees.length || activeIdx < 0) return;
-    setActiveId(visibleTrees[(activeIdx + delta + visibleTrees.length) % visibleTrees.length].id);
-  };
-
   return (
     <div className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-8 sm:pt-10">
-      {/* Asymmetric Editorial Prelude */}
       <section className="grid gap-8 md:grid-cols-12 md:items-end">
         <div className="space-y-4 md:col-span-7">
           <p className="text-xs uppercase tracking-[0.26em] text-[#e9d7b0]" style={{ fontFamily: "var(--font-label)" }}>
@@ -80,32 +76,29 @@ export function StatementCollection() {
         <aside className="md:col-span-5">
           <div className="nsf-glass-ice relative rounded-2xl p-5" style={{ "--gc": "255 206 120" } as CSSProperties}>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#77001E]" style={{ fontFamily: "var(--font-label)" }}>
-              {source === "live" ? "Live Conservatory Inventory" : "Stage 3 Visual Preview"}
+              {source === "live" ? "Live Conservatory Inventory" : "Stage 4 Interactive Preview"}
             </p>
             <p className="mt-1.5 text-sm leading-relaxed text-[#283036]">
               {source === "live"
-                ? "Select any specimen to unfold its full measurements, photography, and white-glove delivery estimate."
+                ? "Tap any specimen to unfold its measurements inline and place it onto your sleigh."
                 : "Layout frames shown while awaiting your specimen photography, exact measurements, and retail pricing."}
             </p>
           </div>
         </aside>
       </section>
 
-      {/* Curated Specimen Navigation Ribbon (No conventional filters) */}
       <nav aria-label="Curated specimen index" className="mt-10 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           {trees.map((t) => {
             const label = `No. ${String(t.specimenNumber).padStart(2, "0")}`;
-            const isSelected = activeId === t.id;
+            const isSelected = expandedId === t.id;
             return (
               <button
                 key={t.id}
                 type="button"
-                onClick={() => setActiveId(t.id)}
+                onClick={() => selectAndScroll(t.id)}
                 className={`min-h-[44px] cursor-pointer rounded-full px-3.5 text-xs uppercase tracking-[0.14em] transition-colors ${
-                  isSelected
-                    ? "nsf-glass-ice font-semibold"
-                    : "nsf-glass-smoked text-[#CADFE9] hover:border-[#e9d7b0]/45"
+                  isSelected ? "nsf-glass-ice font-semibold" : "nsf-glass-smoked text-[#CADFE9] hover:border-[#e9d7b0]/45"
                 }`}
                 style={{ fontFamily: "var(--font-label)" }}
               >
@@ -126,29 +119,20 @@ export function StatementCollection() {
         </button>
       </nav>
 
-      {/* Asymmetric Staggered Specimen Showcase */}
       <section aria-label="Statement tree specimens" className="mt-12 grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-12 md:items-start">
         {visibleTrees.map((specimen, idx) => (
           <SpecimenCard
             key={specimen.id}
             specimen={specimen}
             proportion={proportionFor(idx)}
+            expanded={expandedId === specimen.id}
             isFavorite={favorites.includes(specimen.id)}
             onToggleFavorite={toggleFav}
-            onInspect={(s, el) => { cardRefs.current[s.id] = el; setActiveId(s.id); }}
+            onToggleExpand={selectAndScroll}
             className={layoutSpanFor(idx)}
           />
         ))}
       </section>
-
-      <TreeExpansion
-        specimen={activeSpecimen}
-        getOriginRect={() => (activeId ? cardRefs.current[activeId]?.getBoundingClientRect() ?? null : null)}
-        onClose={() => setActiveId(null)}
-        onPrev={() => step(-1)}
-        onNext={() => step(1)}
-        hasMultiple={visibleTrees.length > 1}
-      />
     </div>
   );
 }
