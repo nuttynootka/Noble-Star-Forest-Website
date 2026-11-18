@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "r
 import { PREVIEW_SPECIMENS, fetchStorefrontTrees } from "@/lib/trees-api";
 import type { TreeSpecimen } from "@/lib/types";
 import { SpecimenCard, type SpecimenProportion } from "./SpecimenCard";
-import { SpecimenDrawer } from "./SpecimenDrawer";
+import { useRef } from "react";
+import { TreeExpansion } from "./TreeExpansion";
 
 function proportionFor(index: number): SpecimenProportion {
   const mod = index % 4;
@@ -27,6 +28,7 @@ export function StatementCollection() {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const cardRefs = useRef<Record<string, HTMLElement | null>>({});
 
   useEffect(() => {
     let alive = true;
@@ -133,14 +135,15 @@ export function StatementCollection() {
             proportion={proportionFor(idx)}
             isFavorite={favorites.includes(specimen.id)}
             onToggleFavorite={toggleFav}
-            onInspect={(s) => setActiveId(s.id)}
+            onInspect={(s, el) => { cardRefs.current[s.id] = el; setActiveId(s.id); }}
             className={layoutSpanFor(idx)}
           />
         ))}
       </section>
 
-      <SpecimenDrawer
+      <TreeExpansion
         specimen={activeSpecimen}
+        getOriginRect={() => (activeId ? cardRefs.current[activeId]?.getBoundingClientRect() ?? null : null)}
         onClose={() => setActiveId(null)}
         onPrev={() => step(-1)}
         onNext={() => step(1)}

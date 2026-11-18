@@ -7,6 +7,9 @@ import { TransitionLink } from "@/components/tree-transition";
 import { Snowfall } from "@/components/atmosphere/Snowfall";
 import { AmbientLights } from "@/components/atmosphere/AmbientLights";
 import { ForestFooter } from "@/components/footer/ForestFooter";
+import { CartProvider } from "@/components/cart/CartContext";
+import { SleighCartDock } from "@/components/cart/SleighCartDock";
+import { SleighDrawer } from "@/components/cart/SleighDrawer";
 
 const NAV_PAGES: NavPage[] = [
   {
@@ -39,12 +42,16 @@ const HeaderNavLink = forwardRef<HTMLAnchorElement, AnchorHTMLAttributes<HTMLAnc
 export function SiteShell({ children }: { children: ReactNode }) {
   const pathname = usePathname() || "/";
   return (
-    <div className="relative flex min-h-dvh flex-col">
-      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0"><Snowfall /></div>
-      <AmbientLights />
-      <GarlandHeader pages={NAV_PAGES} activeHref={pathname} LinkComponent={HeaderNavLink} />
-      <main className="relative z-10 flex-1">{children}</main>
-      <ForestFooter />
-    </div>
+    <CartProvider>
+      <div className="relative flex min-h-dvh flex-col">
+        <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0"><Snowfall /></div>
+        <AmbientLights />
+        <GarlandHeader pages={NAV_PAGES} activeHref={pathname} LinkComponent={HeaderNavLink} />
+        <main className="relative z-10 flex-1">{children}</main>
+        <ForestFooter />
+        <SleighCartDock />
+        <SleighDrawer />
+      </div>
+    </CartProvider>
   );
 }
