@@ -161,6 +161,28 @@ Read with `git fetch origin retail-storefront && git show FETCH_HEAD:<path>`.
    - `close()` is a clearly-labelled placeholder (an instant re-roll).
 4. `components/plate-unroll/plate-unroll.css`: the chain-link style, a copy of `.gh-chain`.
 5. `components/plate-unroll/UnrollingPlates.tsx`: the React wrapper (`open` prop, children = plates).
+5b. **Visual enhancements, all five approved by the user on 2026-11-23.** The engine exposes
+   each plate's live orientation and events, and CSS or the wrapper renders the effect:
+   1. **Real glass thickness:** each plate gets a visible 3D edge in the metallic rim colours
+      (`#5b636c` / `#2b3036`), seen when it tilts or rolls. This replaces reliance on the
+      front-only fake-thickness box-shadow while the plate is in 3D. Approach: one edge slab
+      element per side (bottom and top at least), placed with `matrix3d` from the plate frame
+      offset by the thickness (about 3–5px) along the plate normal.
+   2. **Light catching the glass:** a soft specular sheen slides across each plate as its angle
+      changes. The engine writes CSS variables per plate each frame (for example `--nx`, `--ny`,
+      `--nz` from the plate normal, plus a computed `--sheen` position and strength). A
+      gradient overlay layer in the plate uses them. The light direction is configurable
+      (default: from above and in front, like the star or fairy lights).
+   3. **Shading in the roll:** plates facing away from the viewer darken slightly
+      (`--face` = normal·view, driving a darkening overlay or `filter: brightness`), so the
+      rolled carpet reads clearly as a 3D roll.
+   4. **Mirrored lettering on the back:** keep `backface-visibility: visible` so the etched text
+      reads backwards through the glass while rolled up. Optionally soften it on the back face
+      (lower contrast) so it looks seen through frost.
+   5. **A frost sparkle on unrolling:** when each plate is released and snaps open, the engine
+      emits an `onPlateRelease(index)` callback / DOM event. The wrapper triggers a short burst
+      using the existing glint sparkle style (`.gh-tiny .gh-tiny-soft`, `--gc` colours).
+   All five respect reduced motion: sheen and shading stay static, and there is no sparkle burst.
 6. `demo/`: the plates restyled with plain-CSS copies of the classes above, a dark forest
    background, and Open/Reset buttons. Bundle with esbuild.
 7. Verify:
