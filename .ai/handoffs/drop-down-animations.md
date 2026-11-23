@@ -114,6 +114,64 @@ Read with `git fetch origin retail-storefront && git show FETCH_HEAD:<path>`.
   outer `rounded-[8px] p-[1.5px]`. The font is Cuprum (`--gh-font`), semibold, uppercase,
   tracking 0.06em.
 
+## Prework findings (2026-11-23, this session; verified by the method stated)
+- Toolchain: Node v22.23.5 and npm 10.9.9. The npm registry is reachable (`npm view esbuild`
+  returned 0.28.2, `npm view typescript` returned 7.0.2). Playwright loads. Browsers in
+  `/opt/pw-browsers`: **Chromium only** (no WebKit/Safari, no Firefox). ffmpeg is present
+  (`/opt/pw-browsers/ffmpeg-1011`), so the demo can be recorded to a video or GIF for the user.
+- Google Fonts is reachable (HTTP 200 for the Cuprum CSS), so the demo can load Cuprum like the site does.
+- **The rotation-fit algorithm is verified against a source.** Müller, Bender, Chentanez &
+  Macklin, "A Robust Method to Extract the Rotational Part of Deformations", MIG 2016. The
+  reference implementation is MuJoCo `src/engine/engine_util_spatial.c`, `mju_mat2Rot`, read
+  2026-11-23. Each iteration: `omega = Σ cross(R·col_i, A·col_i) / (|Σ dot(R·col_i, A·col_i)| + ε)`,
+  rotate the quaternion by `|omega|` about `omega/|omega|`, stop when `|omega| < ε`. Warm-start
+  from last frame's quaternion, so 1–3 iterations per step are usually enough.
+- **3D rendering probe** (throwaway files in the scratchpad, Chromium, viewed as screenshots):
+  - `matrix3d` with `transform-origin: 0 0` inside a `perspective` + `preserve-3d` parent
+    renders tilted, twisted and back-facing plates correctly.
+  - `backdrop-filter: blur()` still blurs inside a preserve-3d context.
+  - UNVERIFIED on Safari/iOS (no WebKit here). This matters less than it sounds: the plate face
+    `.gh-frost-glass` is a 95%-opaque gradient (`#fffffff2` …), so little backdrop shows through.
+- Plate anatomy (from `retail-storefront` `GarlandHeader.tsx` `HeaderPlate` + `globals.css`):
+  - outer `.gh-menu-plate`: height `--menu-h` (26px, 28px at md and up), `p-[1.5px]`,
+    `rounded-[8px]`, a metallic gradient `linear-gradient(#f6f8fb,#9aa3ad 40%,#e8edf2 62%,#7d8690)`,
+    and a fake thickness from `box-shadow: 0 3px #5b636c, 0 5px #2b3036, 0 12px 20px #0000008c`.
+  - inner span: `rounded-[6.5px] border-white/20 bg-white/10 backdrop-blur-md shadow-lg`, then
+    the `.gh-frost-glass` overlay, then the `.gh-etched` label (Cuprum 600, uppercase,
+    tracking 0.06em, `px-[7px]`, 12–14px).
+  - 4 glint sparkles per plate (`.gh-tiny .gh-tiny-soft`, positions from `makeGlints(fnv1a(href))`,
+    colour `--gc` from `GLINT_COLORS`).
+  - The fake-thickness box-shadow only reads correctly from the front. When a plate tilts in 3D
+    it will look like a flat sticker unless a real edge is added. This is a design question for
+    the user (see the ideas list in chat).
+- Real menu labels for the demo (`SiteShell.tsx` `NAV_PAGES`):
+  - "Statement Trees", "Wholesale Trees", "Wreaths & Greenery", "Make Payment"
+  - "Meet Us", "Contact Us", "Request Quote"
+
+## Build plan (ordered; each step verified before the next)
+1. `package.json` (private; devDeps typescript, esbuild, react, react-dom, @types/react,
+   @types/react-dom; scripts `typecheck` = `tsc --noEmit`, `demo` = esbuild bundle) and
+   `tsconfig.json` (strict). `npm install`.
+2. `components/plate-unroll/math.ts`: vec3 and quaternion helpers, plus `extractRotation`
+   (Müller 2016).
+3. `components/plate-unroll/engine.ts`: `PlateChainEngine`.
+   - Particles, rigid clusters (shape matching), rope chains, roll construction, the sequential
+     release scheduler, drag, a sleep check, and `matrix3d` rendering for plates and chains.
+   - All tunables live in one exported `UNROLL_PHYSICS` object.
+   - `close()` is a clearly-labelled placeholder (an instant re-roll).
+4. `components/plate-unroll/plate-unroll.css`: the chain-link style, a copy of `.gh-chain`.
+5. `components/plate-unroll/UnrollingPlates.tsx`: the React wrapper (`open` prop, children = plates).
+6. `demo/`: the plates restyled with plain-CSS copies of the classes above, a dark forest
+   background, and Open/Reset buttons. Bundle with esbuild.
+7. Verify:
+   - `npm run typecheck` is clean.
+   - The Playwright frame strip (every 50 ms for about 3 s) shows: rolled → unroll one by one →
+     back/forward/back swing → still.
+   - The sleep check stops `requestAnimationFrame`.
+   - With reduced motion, the plates hang still.
+   - Record an mp4/GIF with ffmpeg for the user.
+8. Show the user the frames or video, tune `UNROLL_PHYSICS` with them, then commit and push.
+
 ## Verification
 - Ran: `git ls-remote --heads origin` → branches `drop-down-animations`, `main`,
   `retail-storefront`, `feature/tree-page-transition`, `feature/wreath-door` (2026-11-23).
