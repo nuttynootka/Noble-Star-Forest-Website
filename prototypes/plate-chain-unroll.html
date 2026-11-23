@@ -1,0 +1,1581 @@
+<title>Plate Chain Unroll</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Cuprum:wght@500;600;700&family=Trirong:wght@400&display=swap">
+<style>
+/* Layout: one full-bleed WebGL stage; title and status top-left; tuning drawer docked right (bottom sheet on phones).
+   Single dark look on purpose: it is the Noble Star Forest site's own night palette. */
+:root {
+  --night: 6 12 10;            /* #060c0a */
+  --canopy: 11 26 20;          /* #0b1a14 */
+  --forest: 0 67 35;           /* #004323 */
+  --evergreen-bright: 86 176 122;
+  --winter: 202 223 233;       /* #cadfe9 */
+  --ivory: 255 252 243;        /* #fffcf3 */
+  --brass: 233 215 176;        /* #e9d7b0 */
+  --muted: 205 217 211;
+  --panel: 8 19 15;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Trirong", Georgia, serif;
+  --font-label: "Cuprum", "Arial Narrow", "Roboto Condensed", sans-serif;
+  color-scheme: dark;
+}
+*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.visible{visibility:visible}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0}.inset-x-0{left:0;right:0}.bottom-0{bottom:0}.bottom-\[max\(16px\2c env\(safe-area-inset-bottom\)\)\]{bottom:max(16px,env(safe-area-inset-bottom))}.left-0{left:0}.right-\[max\(16px\2c env\(safe-area-inset-right\)\)\]{right:max(16px,env(safe-area-inset-right))}.top-0{top:0}.z-10{z-index:10}.z-20{z-index:20}.-mt-3{margin-top:-.75rem}.mb-2{margin-bottom:.5rem}.ml-0\.5{margin-left:.125rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-2{height:.5rem}.h-32{height:8rem}.h-4{height:1rem}.h-9{height:2.25rem}.h-full{height:100%}.max-h-\[52\%\]{max-height:52%}.w-2{width:.5rem}.w-4{width:1rem}.w-9{width:2.25rem}.w-full{width:100%}.max-w-\[30rem\]{max-width:30rem}.touch-none{touch-action:none}.select-none{-webkit-user-select:none;-moz-user-select:none;user-select:none}.resize{resize:both}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.flex-col{flex-direction:column}.place-items-center{place-items:center}.items-start{align-items:flex-start}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-0\.5{gap:.125rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-5{gap:1.25rem}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.whitespace-nowrap{white-space:nowrap}.rounded{border-radius:.25rem}.rounded-\[10px\]{border-radius:10px}.rounded-\[7px\]{border-radius:7px}.rounded-\[8px\]{border-radius:8px}.rounded-full{border-radius:9999px}.rounded-t-\[18px\]{border-top-left-radius:18px;border-top-right-radius:18px}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-line{border-color:rgb(var(--winter)/.16)}.bg-brass{--tw-bg-opacity:1;background-color:rgb(var(--brass)/var(--tw-bg-opacity,1))}.bg-evergreen-bright{--tw-bg-opacity:1;background-color:rgb(var(--evergreen-bright)/var(--tw-bg-opacity,1))}.bg-night\/60{background-color:rgb(var(--night)/.6)}.bg-panel{background-color:rgb(var(--panel)/.8)}.bg-white\/10{background-color:hsla(0,0%,100%,.1)}.bg-winter{--tw-bg-opacity:1;background-color:rgb(var(--winter)/var(--tw-bg-opacity,1))}.p-1{padding:.25rem}.p-2{padding:.5rem}.p-3{padding:.75rem}.px-1{padding-left:.25rem;padding-right:.25rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-\[max\(16px\2c env\(safe-area-inset-left\)\)\]{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-left))}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-\[env\(safe-area-inset-bottom\)\]{padding-bottom:env(safe-area-inset-bottom)}.pl-\[max\(16px\2c env\(safe-area-inset-left\)\)\]{padding-left:max(16px,env(safe-area-inset-left))}.pr-4{padding-right:1rem}.pt-4{padding-top:1rem}.pt-\[max\(16px\2c env\(safe-area-inset-top\)\)\]{padding-top:max(16px,env(safe-area-inset-top))}.font-body{font-family:var(--font-body)}.font-display{font-family:var(--font-display)}.font-label{font-family:var(--font-label)}.font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace}.text-\[10px\]{font-size:10px}.text-\[11\.5px\]{font-size:11.5px}.text-\[11px\]{font-size:11px}.text-\[12\.5px\]{font-size:12.5px}.text-\[12px\]{font-size:12px}.text-\[13px\]{font-size:13px}.text-\[22px\]{font-size:22px}.text-\[30px\]{font-size:30px}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.tabular-nums{--tw-numeric-spacing:tabular-nums;font-variant-numeric:var(--tw-ordinal) var(--tw-slashed-zero) var(--tw-numeric-figure) var(--tw-numeric-spacing) var(--tw-numeric-fraction)}.leading-4{line-height:1rem}.leading-none{line-height:1}.leading-snug{line-height:1.375}.tracking-\[0\.06em\]{letter-spacing:.06em}.tracking-\[0\.07em\]{letter-spacing:.07em}.tracking-\[0\.08em\]{letter-spacing:.08em}.tracking-\[0\.16em\]{letter-spacing:.16em}.tracking-normal{letter-spacing:0}.text-brass{--tw-text-opacity:1;color:rgb(var(--brass)/var(--tw-text-opacity,1))}.text-ivory{--tw-text-opacity:1;color:rgb(var(--ivory)/var(--tw-text-opacity,1))}.text-muted{color:rgb(var(--muted)/.8)}.text-night{--tw-text-opacity:1;color:rgb(var(--night)/var(--tw-text-opacity,1))}.text-winter\/80{color:rgb(var(--winter)/.8)}.accent-\[\#e9d7b0\]{accent-color:#e9d7b0}.opacity-70{opacity:.7}.shadow{--tw-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color),0 1px 2px -1px var(--tw-shadow-color)}.shadow,.shadow-2xl{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgba(0,0,0,.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.outline-none{outline:2px solid transparent;outline-offset:2px}.ring{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.blur{--tw-blur:blur(8px)}.blur,.invert{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.invert{--tw-invert:invert(100%)}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur{--tw-backdrop-blur:blur(8px)}.backdrop-blur,.backdrop-blur-xl{-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-xl{--tw-backdrop-blur:blur(24px)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.hover\:bg-\[\#f3e4c3\]:hover{--tw-bg-opacity:1;background-color:rgb(243 228 195/var(--tw-bg-opacity,1))}.hover\:bg-panel-strong:hover{background-color:rgb(var(--panel)/.94)}.hover\:bg-white\/10:hover{background-color:hsla(0,0%,100%,.1)}.focus-visible\:outline:focus-visible{outline-style:solid}.focus-visible\:outline-2:focus-visible{outline-width:2px}.focus-visible\:outline-offset-2:focus-visible{outline-offset:2px}.focus-visible\:outline-winter:focus-visible{outline-color:rgb(var(--winter)/1)}.disabled\:cursor-not-allowed:disabled{cursor:not-allowed}.disabled\:opacity-40:disabled{opacity:.4}@media (min-width:768px){.md\:inset-x-auto{left:auto;right:auto}.md\:bottom-auto{bottom:auto}.md\:right-\[max\(16px\2c env\(safe-area-inset-right\)\)\]{right:max(16px,env(safe-area-inset-right))}.md\:top-4{top:1rem}.md\:max-h-\[calc\(100\%-32px\)\]{max-height:calc(100% - 32px)}.md\:w-\[340px\]{width:340px}.md\:max-w-\[17\.5rem\]{max-width:17.5rem}.md\:rounded-\[18px\]{border-radius:18px}.md\:px-5{padding-left:1.25rem;padding-right:1.25rem}.md\:pb-0{padding-bottom:0}.md\:pl-\[max\(28px\2c env\(safe-area-inset-left\)\)\]{padding-left:max(28px,env(safe-area-inset-left))}.md\:pt-7{padding-top:1.75rem}.md\:text-\[38px\]{font-size:38px}}@media (min-width:1024px){.lg\:max-w-\[19rem\]{max-width:19rem}}
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  overflow: hidden;
+  color: rgb(var(--ivory));
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(18, 103, 61, 0.22) 0%, rgba(0, 67, 35, 0.14) 38%, transparent 72%),
+    linear-gradient(180deg, #060c0a 0%, #07120e 48%, #050a08 100%);
+  background-color: rgb(var(--night));
+  -webkit-font-smoothing: antialiased;
+}
+/* chain-bead slider: metal thumb like the plate rims, brass fill */
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; margin: 0; background: transparent; cursor: pointer; }
+input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, rgb(var(--brass)) var(--fill), rgb(var(--winter) / 0.18) var(--fill)); }
+input[type="range"]::-moz-range-track { height: 4px; border-radius: 4px; background: linear-gradient(90deg, rgb(var(--brass)) var(--fill), rgb(var(--winter) / 0.18) var(--fill)); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; border: 2px solid rgb(var(--night)); background: radial-gradient(circle at 35% 30%, #fff, #cfd6de 45%, #7d8690); box-shadow: 0 1px 3px rgb(0 0 0 / 0.6); }
+input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; border: 2px solid rgb(var(--night)); background: radial-gradient(circle at 35% 30%, #fff, #cfd6de 45%, #7d8690); box-shadow: 0 1px 3px rgb(0 0 0 / 0.6); }
+input[type="range"]:focus-visible { outline: none; }
+input[type="range"]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px rgb(var(--winter) / 0.75); }
+input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px rgb(var(--winter) / 0.75); }
+.boot { display: grid; place-items: center; height: 100%; padding: 0 max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px)); font: 600 13px/1.4 var(--font-label); letter-spacing: 0.08em; text-transform: uppercase; color: rgb(var(--muted)); text-align: center; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div id="root"><div class="boot" id="boot">Loading the 3D scene…</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script>
+  // If the libraries never arrive, say so instead of leaving a blank page.
+  setTimeout(function () {
+    var b = document.getElementById('boot');
+    if (b) b.textContent = 'The 3D libraries did not load. Check your connection, then reload the page.';
+  }, 12000);
+</script>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.187.0/build/three.module.js';
+import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js';
+import htm from 'https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.module.js';
+
+// ---- PHYSICS CORE (cannon-es) -------------------------------------------
+// Framework-free. Pasted verbatim into the artifact; also run headless in Node.
+const PLATE = { hx: 1.2, hy: 0.375, hz: 0.06, ax: 1.05, ay: 0.35 };
+const BAR = { y: 0, attachY: -0.055, hx: 1.6, r: 0.05 };
+const PLATE_COUNT = 7;
+
+// Internal tunables that have no slider. All in one place for later rounds.
+const TUNE = {
+  dt: 1 / 60,
+  chainStiffness: 6e6, // spook stiffness of the chain equation (lower = more stretch/bounce)
+  chainRelax: 3, // spook relaxation (steps to correct stretch)
+  chainEngageSlack: 0.002, // the chain only pulls when within this of full length
+  chainMaxForce: 1e6,
+  plateMass: 1,
+  massJitter: 0.16, // +/- 8%
+  dampJitter: 0.3, // +/- 15%
+  releaseTwist: 0.32, // impulse at a random corner when a plate leaves the roll
+  windForce: 2.2, // newtons per unit mass at 100% turbulence
+  barSwayX: 0.09, // metres at 100% turbulence
+  barSwayZ: 0.07,
+  barYaw: 0.06, // radians at 100% turbulence
+  gust: 2.6, // impulse per unit mass for the Wind gust button
+  maxStretch: 0.03, // a chain may stretch at most 3% before it is pulled back to length
+  dragMaxForce: 90, // per unit mass; caps the grab so it can't rip the chains
+  rollDamping: 0.9,
+  releaseAngle: 35, // a plate peels off the roll once the turning roll brings it within this many degrees of hanging
+  releaseFallback: 0.6, // ... or after this many seconds, whichever comes first // damping on plates still in the roll (wall/rolling friction)
+  hingeFriction: 0.9, // damps relative spin between chained plates (link friction)
+  settleDamping: 3, // extra damping (1/s) reached at the end of the settle time
+  glideSpeed: 0.18, // below this speed, after 60% of the settle time ...
+  glideTime: 0.5, // ... the plates ease onto their exact resting pose over this long, then physics stops
+  sleepSpeed: 0.035, // every plate below this (m/s + 0.5*rad/s) ...
+  sleepHold: 0.45, // ... for this long => physics stops
+};
+
+const G = { BAR: 1, ROLL: 2, FREE: 4 };
+
+function makeRopeClass(CANNON) {
+  // Tension-only chain between two body-local anchor points.
+  // cannon-es's DistanceConstraint joins body centres and pushes as well as
+  // pulls, so this builds the same ContactEquation with anchors and with the
+  // force clamped to "pull only".
+  return class RopeConstraint extends CANNON.Constraint {
+    constructor(bodyA, pivotA, bodyB, pivotB, length) {
+      super(bodyA, bodyB, { collideConnected: true, wakeUpBodies: true });
+      this.pivotA = pivotA.clone();
+      this.pivotB = pivotB.clone();
+      this.length = length;
+      this.distance = length;
+      const eq = (this.eq = new CANNON.ContactEquation(bodyA, bodyB, TUNE.chainMaxForce));
+      eq.minForce = -TUNE.chainMaxForce; // negative impulse = pull B toward A
+      eq.maxForce = 0; // never push
+      eq.setSpookParams(TUNE.chainStiffness, TUNE.chainRelax, TUNE.dt);
+      this.equations.push(eq);
+      this.rA = new CANNON.Vec3();
+      this.rB = new CANNON.Vec3();
+      this.wA = new CANNON.Vec3();
+      this.wB = new CANNON.Vec3();
+      this.tmp = new CANNON.Vec3();
+    }
+    update() {
+      const A = this.bodyA, B = this.bodyB, eq = this.eq, n = eq.ni;
+      A.quaternion.vmult(this.pivotA, this.rA);
+      B.quaternion.vmult(this.pivotB, this.rB);
+      A.position.vadd(this.rA, this.wA);
+      B.position.vadd(this.rB, this.wB);
+      this.wB.vsub(this.wA, n);
+      const d = n.length();
+      this.distance = d;
+      if (d < 1e-6) n.set(0, -1, 0);
+      else n.scale(1 / d, n);
+      // g = n.(xB + rj - xA - ri) = d - length
+      n.scale(this.length * 0.5, this.tmp);
+      this.rA.vadd(this.tmp, eq.ri);
+      this.rB.vsub(this.tmp, eq.rj);
+      eq.enabled = d > this.length - TUNE.chainEngageSlack;
+    }
+  };
+}
+
+function createLadderPhysics(CANNON, initialParams, hooks = {}) {
+  const RopeConstraint = makeRopeClass(CANNON);
+  const params = { ...initialParams };
+  const rnd = Math.random;
+  const sym = () => rnd() * 2 - 1;
+  const V = (x, y, z) => new CANNON.Vec3(x, y, z);
+
+  const world = new CANNON.World({ gravity: V(0, params.gravity, 0) });
+  world.solver.iterations = 20;
+  world.broadphase = new CANNON.NaiveBroadphase();
+  world.quatNormalizeFast = false;
+  world.quatNormalizeSkip = 0;
+  world.allowSleep = false; // whole-ladder sleep is handled below
+
+  const plateMat = new CANNON.Material('plate');
+  const barMat = new CANNON.Material('bar');
+  world.addContactMaterial(new CANNON.ContactMaterial(plateMat, plateMat, {
+    friction: 0.22, restitution: 0.3, contactEquationStiffness: 4e6, contactEquationRelaxation: 3,
+  }));
+  world.addContactMaterial(new CANNON.ContactMaterial(plateMat, barMat, { friction: 0.3, restitution: 0.25 }));
+
+  const bar = new CANNON.Body({
+    type: CANNON.Body.KINEMATIC, mass: 0, material: barMat,
+    collisionFilterGroup: G.BAR, collisionFilterMask: G.FREE | G.ROLL,
+  });
+  bar.addShape(new CANNON.Box(V(BAR.hx, BAR.r, BAR.r)));
+  bar.position.set(0, BAR.y, 0);
+  world.addBody(bar);
+  let barYaw = 0;
+
+  const plates = [];
+  for (let k = 0; k < PLATE_COUNT; k++) {
+    const f = {
+      m: TUNE.plateMass * (1 + sym() * TUNE.massJitter * 0.5),
+      ld: 1 + sym() * TUNE.dampJitter * 0.5,
+      ad: 1 + sym() * TUNE.dampJitter * 0.5,
+      ph: Array.from({ length: 8 }, () => rnd() * Math.PI * 2),
+    };
+    const body = new CANNON.Body({
+      mass: f.m, material: plateMat,
+      collisionFilterGroup: G.ROLL, collisionFilterMask: G.BAR | G.FREE,
+    });
+    body.addShape(new CANNON.Box(V(PLATE.hx, PLATE.hy, PLATE.hz)));
+    world.addBody(body);
+    plates.push({ body, f, inRoll: true, index: k });
+  }
+
+  const ropes = [];
+  const addRope = (a, pa, b, pb, info) => {
+    const c = new RopeConstraint(a, pa, b, pb, params.chainLength);
+    world.addConstraint(c);
+    ropes.push({ c, ...info });
+  };
+  for (const s of [-1, 1]) addRope(bar, V(s * PLATE.ax, BAR.attachY, 0), plates[0].body, V(s * PLATE.ax, PLATE.ay, 0), { from: -1, to: 0, side: s });
+  for (let k = 0; k < PLATE_COUNT - 1; k++)
+    for (const s of [-1, 1]) addRope(plates[k].body, V(s * PLATE.ax, -PLATE.ay, 0), plates[k + 1].body, V(s * PLATE.ax, PLATE.ay, 0), { from: k, to: k + 1, side: s });
+
+  let locks = [];
+  let state = 'rolled'; // rolled | unrolling | swinging | settled
+  let simTime = 0;
+  let nextRelease = 1;
+  let nextReleaseAt = 0;
+  let lastReleaseAt = 0;
+  let sleeping = false;
+  let quiet = 0;
+  let drag = null;
+  let glide = null; // ease-to-rest at the end of settling
+  let calm = 0; // seconds since the last disturbance (release, gust, drag, slider)
+  const tmpA = V(0, 0, 0), tmpB = V(0, 0, 0);
+
+  const applyDamping = () => {
+    for (const p of plates) {
+      const roll = p.inRoll && state === 'unrolling' ? TUNE.rollDamping : 0;
+      p.body.linearDamping = Math.min(0.99, Math.max(roll, params.linearDamping * p.f.ld));
+      p.body.angularDamping = Math.min(0.99, Math.max(roll, params.angularDamping * p.f.ad));
+    }
+  };
+  applyDamping();
+
+  // Side view of the carpet roll: plates as a closed heptagon curling toward
+  // the viewer (+z), front faces on the inside. Then the whole roll is turned
+  // about plate 0's top chain point so its centre of mass hangs straight below.
+  function rollPose(L) {
+    const beta = (Math.PI * 2) / PLATE_COUNT;
+    const hinge = L * 0.9;
+    const out = [];
+    let th = 0, ty = 0, tz = 0;
+    for (let k = 0; k < PLATE_COUNT; k++) {
+      const dy = -Math.cos(th), dz = Math.sin(th);
+      out.push({ th, cy: ty + PLATE.ay * dy, cz: tz + PLATE.ay * dz });
+      if (k < PLATE_COUNT - 1) {
+        const by = ty + 2 * PLATE.ay * dy, bz = tz + 2 * PLATE.ay * dz;
+        const thn = th + beta, tm = (th + thn) / 2;
+        ty = by - Math.cos(tm) * hinge;
+        tz = bz + Math.sin(tm) * hinge;
+        th = thn;
+      }
+    }
+    let my = 0, mz = 0, M = 0;
+    out.forEach((o, k) => { const m = plates[k].f.m; my += o.cy * m; mz += o.cz * m; M += m; });
+    const alpha = Math.PI - Math.atan2(mz / M, my / M);
+    const ca = Math.cos(alpha), sa = Math.sin(alpha);
+    const t0y = BAR.attachY - L;
+    return out.map((o) => ({
+      pos: V(0, t0y + o.cy * ca - o.cz * sa, o.cy * sa + o.cz * ca),
+      angle: alpha - o.th,
+    }));
+  }
+
+  function restPose(L) {
+    const out = [];
+    let ty = BAR.attachY - L;
+    for (let k = 0; k < PLATE_COUNT; k++) {
+      out.push({ pos: V(0, ty - PLATE.ay, 0), angle: 0 });
+      ty -= 2 * PLATE.ay + L;
+    }
+    return out;
+  }
+
+  // Kicks scale with the natural swing speed, sqrt(g), so low gravity stays calm.
+  const gScale = () => Math.sqrt(Math.abs(params.gravity) / 12);
+  const X = V(1, 0, 0);
+  const UP = V(0, 1, 0);
+  function placeBody(b, pos, angle) {
+    b.position.copy(pos);
+    b.quaternion.setFromAxisAngle(X, angle);
+    b.previousPosition.copy(b.position);
+    b.interpolatedPosition.copy(b.position);
+    b.previousQuaternion.copy(b.quaternion);
+    b.interpolatedQuaternion.copy(b.quaternion);
+    b.velocity.setZero();
+    b.angularVelocity.setZero();
+    b.force.setZero();
+    b.torque.setZero();
+  }
+
+  function setGroup(p, roll) {
+    p.inRoll = roll;
+    p.body.collisionFilterGroup = roll ? G.ROLL : G.FREE;
+    p.body.collisionFilterMask = roll ? G.BAR | G.FREE : G.BAR | G.ROLL | G.FREE;
+  }
+
+  function clearLocks() {
+    for (const l of locks) if (l) world.removeConstraint(l);
+    locks = [];
+  }
+
+  function resetBar() {
+    placeBody(bar, V(0, BAR.y, 0), 0);
+    barYaw = 0;
+  }
+
+  function reroll() {
+    endDrag();
+    clearLocks();
+    resetBar();
+    const pose = rollPose(params.chainLength);
+    plates.forEach((p, k) => { placeBody(p.body, pose[k].pos, pose[k].angle); setGroup(p, true); });
+    // Star topology: each plate is locked straight to the core plate, so the
+    // solver holds the roll rigid in one hop instead of six.
+    const core = plates[PLATE_COUNT - 1].body;
+    locks = [null];
+    for (let k = 1; k < PLATE_COUNT; k++) {
+      const l = new CANNON.LockConstraint(plates[k - 1].body, core, { maxForce: 1e6 });
+      world.addConstraint(l);
+      locks.push(l);
+    }
+    state = 'rolled';
+    nextRelease = 1;
+    wake();
+    emitStatus();
+  }
+
+  function hangStill() {
+    endDrag();
+    clearLocks();
+    resetBar();
+    const pose = restPose(params.chainLength);
+    plates.forEach((p, k) => { placeBody(p.body, pose[k].pos, 0); setGroup(p, false); });
+    state = 'settled';
+    sleeping = true;
+    emitStatus();
+  }
+
+  function freePlate(i, twist) {
+    const p = plates[i];
+    if (!p.inRoll) return;
+    setGroup(p, false);
+    if (twist) {
+      const b = p.body, k = TUNE.releaseTwist * b.mass * (0.6 + params.turbulence) * gScale();
+      const corner = V(Math.sign(sym()) * PLATE.hx, -PLATE.hy, 0);
+      b.quaternion.vmult(corner, tmpA);
+      // Kick the plate's lower edge away from the viewer so it swings back
+      // first; the random corner and sideways part add the twist.
+      b.applyImpulse(V(sym() * 0.3 * k, 0, -k * (0.6 + 0.4 * rnd())), tmpA);
+    }
+    hooks.onRelease && hooks.onRelease(i);
+  }
+
+  function release(k) {
+    const l = locks[k];
+    if (l) world.removeConstraint(l);
+    locks[k] = null;
+    freePlate(k - 1, true);
+    if (k === PLATE_COUNT - 1) freePlate(k, true);
+    calm = 0;
+    applyDamping();
+  }
+
+  function open(reduced) {
+    if (state !== 'rolled') return;
+    if (reduced) { hangStill(); return; }
+    state = 'unrolling';
+    nextRelease = 1;
+    nextReleaseAt = simTime;
+    lastReleaseAt = simTime;
+    applyDamping();
+    wake();
+    emitStatus();
+  }
+
+  function wake() { sleeping = false; quiet = 0; calm = 0; glide = null; }
+
+  let lastStatus = '';
+  function emitStatus() {
+    const s = `${state}|${sleeping ? 1 : 0}|${nextRelease}`;
+    if (s === lastStatus) return;
+    lastStatus = s;
+    hooks.onStatus && hooks.onStatus({ state, sleeping, released: Math.min(PLATE_COUNT, nextRelease - 1 + (nextRelease > PLATE_COUNT - 1 ? 1 : 0)) });
+  }
+
+  // Smooth pseudo-random signal from summed sines (no per-frame jitter).
+  const wave = (t, ph, a, b) => Math.sin(t * a + ph) + 0.55 * Math.sin(t * b + ph * 1.7);
+
+  world.addEventListener('preStep', () => {
+    const dt = TUNE.dt;
+    simTime += dt;
+    if (state === 'unrolling' && simTime >= nextReleaseAt) {
+      // Gate: the roll only lets go of its next plate once the plate above has
+      // swung down near hanging, so the roll really travels down one plate at a time.
+      // The plate about to peel off (still in the roll) must have turned to hanging.
+      const prev = nextRelease >= 2 ? plates[nextRelease - 1].body : null;
+      let ready = true;
+      if (prev) {
+        prev.quaternion.vmult(UP, tmpB);
+        const tilt = Math.acos(Math.max(-1, Math.min(1, tmpB.y))) * 180 / Math.PI;
+        ready = tilt < TUNE.releaseAngle || simTime - lastReleaseAt > TUNE.releaseFallback;
+      }
+      if (ready) {
+        release(nextRelease);
+        lastReleaseAt = simTime;
+        nextRelease++;
+        nextReleaseAt = simTime + params.stagger / 1000;
+        if (nextRelease > PLATE_COUNT - 1) { state = 'swinging'; applyDamping(); }
+        emitStatus();
+      }
+    }
+    const amp = params.turbulence;
+    const tb = simTime + dt;
+    const tx = TUNE.barSwayX * amp * (Math.sin(tb * 0.55) + 0.4 * Math.sin(tb * 1.31 + 1));
+    const tz = TUNE.barSwayZ * amp * Math.sin(tb * 0.43 + 2);
+    const yaw = TUNE.barYaw * amp * Math.sin(tb * 0.37 + 0.5);
+    bar.velocity.set((tx - bar.position.x) / dt, (BAR.y - bar.position.y) / dt, (tz - bar.position.z) / dt);
+    bar.angularVelocity.set(0, (yaw - barYaw) / dt, 0);
+    barYaw = yaw;
+    if (amp > 0) {
+      for (const p of plates) {
+        const b = p.body, ph = p.f.ph, F = TUNE.windForce * amp * b.mass;
+        tmpA.set(F * 0.45 * wave(simTime, ph[0], 0.9, 2.3), F * 0.15 * wave(simTime, ph[1], 1.1, 2.9), F * wave(simTime, ph[2], 0.7, 1.9));
+        tmpB.set(PLATE.hx * 0.9 * Math.sin(simTime * 1.3 + ph[3]), PLATE.hy * 0.8 * Math.sin(simTime * 1.7 + ph[4]), 0);
+        b.quaternion.vmult(tmpB, tmpB);
+        b.applyForce(tmpA, tmpB);
+      }
+    }
+    // Link friction: oppose relative spin between neighbours.
+    const hf = TUNE.hingeFriction;
+    for (let k = 0; k < PLATE_COUNT; k++) {
+      const b = plates[k].body;
+      if (plates[k].inRoll) continue;
+      const wPrev = k === 0 ? bar.angularVelocity : plates[k - 1].body.angularVelocity;
+      wPrev.vsub(b.angularVelocity, tmpA); // prev - this
+      const I = b.mass * 0.2;
+      tmpA.scale(hf * I, tmpA);
+      b.torque.vadd(tmpA, b.torque);
+      if (k > 0 && !plates[k - 1].inRoll) plates[k - 1].body.torque.vsub(tmpA, plates[k - 1].body.torque);
+    }
+    // Settle assist: damping that ramps up over the settle time after the
+    // last disturbance, so the swing dies out and the simulation can stop.
+    if (state !== 'unrolling' && !drag) calm += dt;
+    const T = Math.max(0.5, params.settle);
+    const u = Math.min(1, Math.max(0, (calm - 0.3 * T) / (0.7 * T)));
+    const extra = TUNE.settleDamping * u * u * (3 - 2 * u) * (1 - 0.85 * amp);
+    if (extra > 0) {
+      const fl = Math.exp(-extra * dt), fa = Math.exp(-extra * 1.3 * dt);
+      for (const p of plates) { p.body.velocity.scale(fl, p.body.velocity); p.body.angularVelocity.scale(fa, p.body.angularVelocity); }
+    }
+    if (drag) {
+      const m = drag.mouse;
+      m.velocity.set((drag.target.x - m.position.x) / dt, (drag.target.y - m.position.y) / dt, (drag.target.z - m.position.z) / dt);
+    }
+  });
+
+  // Chains are steel: after the solver, pull any chain stretched past
+  // maxStretch back to length (positions plus the separating velocity), so a
+  // hard snap can't read as rubber. Plates still locked in the roll are skipped.
+  const pA = V(0, 0, 0), pB = V(0, 0, 0), nR = V(0, 0, 0);
+  function clampChains() {
+    for (let pass = 0; pass < 3; pass++) {
+      for (const r of ropes) {
+        const c = r.c, A = c.bodyA, B = c.bodyB;
+        if ((r.from >= 0 && plates[r.from].inRoll) || plates[r.to].inRoll) continue;
+        A.quaternion.vmult(c.pivotA, pA); A.position.vadd(pA, pA);
+        B.quaternion.vmult(c.pivotB, pB); B.position.vadd(pB, pB);
+        pB.vsub(pA, nR);
+        const d = nR.length(), max = c.length * (1 + TUNE.maxStretch);
+        if (d <= max) continue;
+        nR.scale(1 / d, nR);
+        const wA = A.type === CANNON.Body.DYNAMIC ? A.invMass : 0, wB = B.invMass, sum = wA + wB;
+        if (sum <= 0) continue;
+        const ex = d - max;
+        A.position.addScaledVector(ex * (wA / sum), nR, A.position);
+        B.position.addScaledVector(-ex * (wB / sum), nR, B.position);
+        const sep = B.velocity.dot(nR) - A.velocity.dot(nR);
+        if (sep > 0) {
+          A.velocity.addScaledVector(sep * (wA / sum), nR, A.velocity);
+          B.velocity.addScaledVector(-sep * (wB / sum), nR, B.velocity);
+        }
+      }
+    }
+  }
+
+  world.addEventListener('postStep', () => {
+    clampChains();
+    let maxSp = 0;
+    for (const p of plates) maxSp = Math.max(maxSp, p.body.velocity.length() + 0.5 * p.body.angularVelocity.length());
+    const canRest = state === 'swinging' && params.turbulence === 0 && !drag;
+    if (canRest && !glide && ((calm > 0.6 * params.settle && maxSp < TUNE.glideSpeed) || calm > params.settle)) startGlide();
+    // The rolled-up roll can also go still (nothing to glide to).
+    const rolledQuiet = state === 'rolled' && params.turbulence === 0 && !drag && maxSp < TUNE.sleepSpeed;
+    quiet = rolledQuiet ? quiet + TUNE.dt : 0;
+    if (quiet > TUNE.sleepHold) {
+      sleeping = true;
+      for (const p of plates) { p.body.velocity.setZero(); p.body.angularVelocity.setZero(); }
+      emitStatus();
+    }
+  });
+
+  const qTmp = new CANNON.Quaternion();
+  function startGlide() {
+    const rest = restPose(params.chainLength);
+    glide = {
+      t: 0,
+      from: plates.map((p) => ({ pos: p.body.position.clone(), q: p.body.quaternion.clone() })),
+      to: rest.map((r) => ({ pos: r.pos, q: new CANNON.Quaternion() })),
+    };
+  }
+  function stepGlide(frameDt) {
+    glide.t += frameDt;
+    const u = Math.min(1, glide.t / TUNE.glideTime);
+    const e = u * u * (3 - 2 * u);
+    plates.forEach((p, k) => {
+      const a = glide.from[k], b = glide.to[k], body = p.body;
+      a.pos.lerp(b.pos, e, body.position);
+      a.q.slerp(b.q, e, qTmp);
+      body.quaternion.copy(qTmp);
+      body.previousPosition.copy(body.position);
+      body.interpolatedPosition.copy(body.position);
+      body.previousQuaternion.copy(body.quaternion);
+      body.interpolatedQuaternion.copy(body.quaternion);
+      body.velocity.setZero();
+      body.angularVelocity.setZero();
+    });
+    if (u >= 1) {
+      glide = null;
+      sleeping = true;
+      state = 'settled';
+      emitStatus();
+    }
+  }
+
+  function step(frameDt) {
+    if (sleeping) return false;
+    if (glide) { stepGlide(Math.min(frameDt, 0.1)); return true; }
+    world.step(TUNE.dt, Math.min(frameDt, 0.1), 10);
+    return true;
+  }
+
+  function setParams(next) {
+    const prevL = params.chainLength;
+    Object.assign(params, next);
+    world.gravity.set(0, params.gravity, 0);
+    applyDamping();
+    for (const r of ropes) r.c.length = params.chainLength;
+    if (state === 'rolled' && Math.abs(prevL - params.chainLength) > 1e-9) reroll();
+    else if (state === 'settled' && sleeping && Math.abs(prevL - params.chainLength) > 1e-9) {
+      wake(); state = 'swinging'; emitStatus();
+    }
+    wake();
+  }
+
+  function gust() {
+    if (state === 'settled') state = 'swinging';
+    wake();
+    for (const p of plates) {
+      if (rnd() < 0.15) continue;
+      const b = p.body, k = TUNE.gust * b.mass * (0.6 + rnd() * 0.8) * gScale();
+      tmpB.set(Math.sign(sym()) * PLATE.hx * 0.95, Math.sign(sym()) * PLATE.hy * 0.9, 0);
+      b.quaternion.vmult(tmpB, tmpB);
+      b.applyImpulse(V(sym() * 0.55 * k, rnd() * 0.25 * k, sym() * k), tmpB);
+    }
+    emitStatus();
+  }
+
+  function beginDrag(index, worldPoint) {
+    endDrag();
+    const b = plates[index].body;
+    const mouse = new CANNON.Body({ mass: 0, type: CANNON.Body.KINEMATIC, collisionFilterGroup: 0, collisionFilterMask: 0 });
+    mouse.position.copy(worldPoint);
+    world.addBody(mouse);
+    const local = V(0, 0, 0);
+    b.pointToLocalFrame(worldPoint, local);
+    const c = new CANNON.PointToPointConstraint(b, local, mouse, V(0, 0, 0), TUNE.dragMaxForce * b.mass);
+    world.addConstraint(c);
+    drag = { mouse, c, index, target: worldPoint.clone() };
+    if (state === 'settled') state = 'swinging';
+    wake();
+    emitStatus();
+  }
+  function moveDrag(worldPoint) { if (drag) { drag.target.copy(worldPoint); wake(); } }
+  function endDrag() {
+    if (!drag) return;
+    world.removeConstraint(drag.c);
+    world.removeBody(drag.mouse);
+    drag = null;
+    wake();
+  }
+
+  function destroy() {
+    endDrag();
+    clearLocks();
+    for (const r of ropes) world.removeConstraint(r.c);
+    for (const p of plates) world.removeBody(p.body);
+    world.removeBody(bar);
+  }
+
+  reroll();
+
+  return {
+    world, bar, plates, ropes, params, TUNE,
+    get state() { return state; },
+    get sleeping() { return sleeping; },
+    get time() { return simTime; },
+    get dragging() { return drag ? drag.index : -1; },
+    step, setParams, open, reroll, gust, beginDrag, moveDrag, endDrag, wake, destroy,
+  };
+}
+
+// ---- RENDERER (three.js) + UI (React) ------------------------------------
+const { useEffect, useRef, useState, useCallback } = React;
+const html = htm.bind(React.createElement);
+
+// The real header menu (retail-storefront branch, SiteShell.tsx NAV_PAGES).
+const MENU = [
+  { label: 'Statement Trees', href: '/statement-trees' },
+  { label: 'Wholesale Trees', href: 'https://wholesale.noblestarforest.com' },
+  { label: 'Wreaths & Greenery', href: '/wreaths-and-greenery' },
+  { label: 'Make Payment', href: '/make-payment' },
+  { label: 'Meet Us', href: '/meet-us' },
+  { label: 'Contact Us', href: '/contact-us' },
+  { label: 'Request Quote', href: '/request-quote' },
+];
+const GLINT_COLORS = ['255 250 240', '255 206 120'];
+
+// Ported from components/garland-header/utils.ts so every plate keeps its own glints.
+function prng(seed) {
+  let s = seed >>> 0;
+  return () => {
+    s = (s + 1831565813) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function fnv1a(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+function makeGlints(seed) {
+  const r = prng(seed);
+  const out = [];
+  const pickPos = () => {
+    const roll = r();
+    if (roll < 0.3) return { x: 6 + r() * 88, y: 1 + r() * 3 };
+    if (roll < 0.85) return { x: 6 + r() * 88, y: 100 + r() * 7 };
+    return { x: roll < 0.92 ? 0.5 + r() * 1.5 : 98 + r() * 1.5, y: 25 + r() * 50 };
+  };
+  for (let i = 0; i < 6; i++) {
+    const kind = i < 2 ? 'star' : 'fleck';
+    const { x, y } = pickPos();
+    const dur = kind === 'star' ? 2.8 + r() * 2.2 : 1.6 + r() * 1.4;
+    out.push({ x, y, kind, dur, delay: -r() * dur });
+  }
+  return out;
+}
+
+const DEFAULTS = { gravity: -12, chainLength: 0.22, linearDamping: 0.12, angularDamping: 0.15, stagger: 110, turbulence: 0, settle: 2 };
+const SLIDERS = [
+  { key: 'gravity', label: 'Gravity', min: 2, max: 20, step: 0.1, invert: true, fmt: (v) => `−${Math.abs(v).toFixed(1)} m/s²`, hint: 'Stronger pull = faster unroll and snappier swings.' },
+  { key: 'chainLength', label: 'Chain length / slack', min: 0.15, max: 0.8, step: 0.01, fmt: (v) => `${v.toFixed(2)} m`, hint: 'Gap between plates. Chains only pull when taut.' },
+  { key: 'linearDamping', label: 'Air damping', min: 0.01, max: 0.5, step: 0.01, fmt: (v) => v.toFixed(2), hint: 'Drag on swinging and bouncing.' },
+  { key: 'angularDamping', label: 'Twist damping', min: 0.01, max: 0.5, step: 0.01, fmt: (v) => v.toFixed(2), hint: 'Drag on twisting and tilting.' },
+  { key: 'stagger', label: 'Unroll stagger', min: 20, max: 300, step: 5, fmt: (v) => `${Math.round(v)} ms`, hint: 'Shortest wait between plates leaving the roll.' },
+  { key: 'turbulence', label: 'Wind & chaos', min: 0, max: 1, step: 0.01, fmt: (v) => `${Math.round(v * 100)}%`, hint: 'Air turbulence plus bar sway. 0% lets everything go still.' },
+  { key: 'settle', label: 'Settle time', min: 1, max: 6, step: 0.1, fmt: (v) => `${v.toFixed(1)} s`, hint: 'How long the swing lasts before it eases to rest and physics stops.' },
+];
+const STORE_KEY = 'plate-chain-unroll:v1';
+function loadSaved() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+    if (!raw || typeof raw !== 'object') return null;
+    const p = { ...DEFAULTS };
+    for (const s of SLIDERS) {
+      const v = Number(raw.params && raw.params[s.key]);
+      if (!Number.isFinite(v)) continue;
+      const lo = s.invert ? -s.max : s.min, hi = s.invert ? -s.min : s.max;
+      p[s.key] = Math.min(hi, Math.max(lo, v));
+    }
+    return { params: p, view: ['front', 'quarter', 'side'].includes(raw.view) ? raw.view : 'quarter' };
+  } catch { return null; }
+}
+function save(params, view) {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify({ params, view })); } catch { /* storage blocked */ }
+}
+
+// ---------- plate textures: the header plate, painted ----------------------
+const W = PLATE.hx * 2, H = PLATE.hy * 2, D = PLATE.hz * 2;
+const BEV = 0.012, BT = 0.014; // glass edge bevel
+const SW = W - 2 * BEV, SH = H - 2 * BEV;
+const RAD = H * (8 / 26) - BEV; // .gh-menu-plate rounded-[8px] on a 26px plate
+const TEX_W = 1280, TEX_H = Math.round((TEX_W * SH) / SW);
+const FONT = '"Cuprum", "Arial Narrow", "Roboto Condensed", sans-serif';
+
+function rr(ctx, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+function canvas2d(w, h) {
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  return [c, c.getContext('2d')];
+}
+let NOISE = null;
+function frostNoise() {
+  if (NOISE) return NOISE;
+  const [c, ctx] = canvas2d(TEX_W, TEX_H);
+  const img = ctx.createImageData(TEX_W, TEX_H);
+  const r = prng(99);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const n = r();
+    const dark = n < 0.06;
+    img.data[i] = img.data[i + 1] = img.data[i + 2] = dark ? 90 : 255;
+    img.data[i + 3] = dark ? 18 : Math.round(n * n * 70);
+  }
+  ctx.putImageData(img, 0, 0);
+  NOISE = c;
+  return c;
+}
+function spacedWidth(ctx, text, fs, track) {
+  let w = 0;
+  for (const ch of text) w += ctx.measureText(ch).width;
+  return w + track * fs * (text.length - 1);
+}
+function drawSpaced(ctx, text, cx, baseline, fs, track) {
+  let x = cx - spacedWidth(ctx, text, fs, track) / 2;
+  for (const ch of text) { ctx.fillText(ch, x, baseline); x += ctx.measureText(ch).width + track * fs; }
+}
+function labelFontSize() {
+  const [, ctx] = canvas2d(8, 8);
+  ctx.font = `600 100px ${FONT}`;
+  const pad = TEX_H * (1.5 / 26);
+  const widest = Math.max(...MENU.map((m) => spacedWidth(ctx, m.label.toUpperCase(), 100, 0.06)));
+  return Math.min(TEX_H * 0.36, (100 * (TEX_W - 2 * pad) * 0.86) / widest);
+}
+
+// .gh-menu-plate (metal rim) + bg-white/10 + .gh-frost-glass + .gh-etched
+function paintPlate(label, gc, fs, back) {
+  const [c, ctx] = canvas2d(TEX_W, TEX_H);
+  const w = TEX_W, h = TEX_H, u = h / 26; // u = one CSS px on the 26px header plate
+  rr(ctx, 0, 0, w, h, 8 * u);
+  const rim = ctx.createLinearGradient(0, 0, 0, h);
+  rim.addColorStop(0, '#f6f8fb'); rim.addColorStop(0.4, '#9aa3ad'); rim.addColorStop(0.62, '#e8edf2'); rim.addColorStop(1, '#7d8690');
+  ctx.fillStyle = rim; ctx.fill();
+
+  const p = 1.5 * u, iw = w - 2 * p, ih = h - 2 * p, ir = 6.5 * u;
+  ctx.save();
+  rr(ctx, p, p, iw, ih, ir);
+  ctx.clip();
+  ctx.fillStyle = '#33443d'; ctx.fillRect(0, 0, w, h); // forest seen through the blur
+  ctx.fillStyle = 'rgba(255,255,255,0.10)'; ctx.fillRect(0, 0, w, h);
+  // radial-gradient(at 50% 28%, #fffffff2, #ecf1f5eb 55%, #d6dee6e6) as an ellipse through the farthest corner
+  const cy = p + ih * (back ? 0.72 : 0.28);
+  ctx.save();
+  ctx.translate(w / 2, cy);
+  ctx.scale((iw / 2) * Math.SQRT2, ih * 0.72 * Math.SQRT2);
+  const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+  g.addColorStop(0, back ? 'rgba(244,247,249,0.93)' : 'rgba(255,255,255,0.95)');
+  g.addColorStop(0.55, back ? 'rgba(228,234,239,0.92)' : 'rgba(236,241,245,0.92)');
+  g.addColorStop(1, 'rgba(214,222,230,0.90)');
+  ctx.fillStyle = g;
+  ctx.fillRect(-2, -2, 4, 4);
+  ctx.restore();
+  ctx.drawImage(frostNoise(), 0, 0);
+  // inset 0 -3px 6px #6e7d8c59 (bottom) and inset 0 1px 1px #fffffff2 (top)
+  const bot = ctx.createLinearGradient(0, p + ih - 7 * u, 0, p + ih);
+  bot.addColorStop(0, 'rgba(110,125,140,0)'); bot.addColorStop(1, 'rgba(110,125,140,0.38)');
+  ctx.fillStyle = bot; ctx.fillRect(0, p + ih - 7 * u, w, 7 * u);
+  const top = ctx.createLinearGradient(0, p, 0, p + 1.6 * u);
+  top.addColorStop(0, `rgba(${gc.split(' ').join(',')},0.55)`);
+  top.addColorStop(0.45, 'rgba(255,255,255,0.95)'); top.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = top; ctx.fillRect(0, p, w, 1.6 * u);
+  ctx.restore();
+  rr(ctx, p + 0.5 * u, p + 0.5 * u, iw - u, ih - u, ir);
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = u; ctx.stroke();
+
+  // etched label
+  const text = label.toUpperCase();
+  ctx.font = `600 ${fs}px ${FONT}`;
+  ctx.textBaseline = 'alphabetic';
+  const cap = ctx.measureText('H').actualBoundingBoxAscent || fs * 0.68;
+  const base = h / 2 + cap / 2;
+  if (!back) {
+    ctx.fillStyle = 'rgba(255,255,255,0.8)'; drawSpaced(ctx, text, w / 2, base + fs * 0.075, fs, 0.06);
+    ctx.fillStyle = 'rgba(0,0,0,0.25)'; drawSpaced(ctx, text, w / 2, base - fs * 0.038, fs, 0.06);
+    ctx.fillStyle = '#283036'; drawSpaced(ctx, text, w / 2, base, fs, 0.06);
+  } else {
+    // seen from behind: mirrored and softened by the frost
+    ctx.save();
+    ctx.translate(w, 0); ctx.scale(-1, 1);
+    ctx.fillStyle = 'rgba(40,48,54,0.07)';
+    const rad = fs * 0.03;
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2;
+      drawSpaced(ctx, text, w / 2 + Math.cos(a) * rad, base + Math.sin(a) * rad, fs, 0.06);
+    }
+    ctx.fillStyle = 'rgba(40,48,54,0.16)'; drawSpaced(ctx, text, w / 2, base, fs, 0.06);
+    ctx.restore();
+  }
+  return c;
+}
+// green = roughness, blue = metalness: metal rim, frosted glass inside
+function paintMask() {
+  const [c, ctx] = canvas2d(256, Math.round((256 * TEX_H) / TEX_W));
+  const w = c.width, h = c.height, u = h / 26;
+  ctx.fillStyle = 'rgb(0,74,255)'; ctx.fillRect(0, 0, w, h);
+  rr(ctx, 1.5 * u, 1.5 * u, w - 3 * u, h - 3 * u, 6.5 * u);
+  ctx.fillStyle = 'rgb(0,140,0)'; ctx.fill();
+  return c;
+}
+function paintSparkle() {
+  const [c, ctx] = canvas2d(128, 128);
+  const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  g.addColorStop(0, '#fff'); g.addColorStop(0.16, '#fff'); g.addColorStop(0.3, 'rgba(255,255,255,0.75)'); g.addColorStop(0.55, 'rgba(255,255,255,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 128, 128);
+  const lh = ctx.createLinearGradient(0, 0, 128, 0);
+  lh.addColorStop(0.1, 'rgba(255,255,255,0)'); lh.addColorStop(0.5, 'rgba(255,255,255,0.8)'); lh.addColorStop(0.9, 'rgba(255,255,255,0)');
+  ctx.fillStyle = lh; ctx.fillRect(0, 60, 128, 8);
+  const lv = ctx.createLinearGradient(0, 0, 0, 128);
+  lv.addColorStop(0.1, 'rgba(255,255,255,0)'); lv.addColorStop(0.5, 'rgba(255,255,255,0.8)'); lv.addColorStop(0.9, 'rgba(255,255,255,0)');
+  ctx.fillStyle = lv; ctx.fillRect(60, 0, 8, 128);
+  return c;
+}
+function roundedShape(w, h, r) {
+  const s = new THREE.Shape(), x = -w / 2, y = -h / 2;
+  s.moveTo(x + r, y);
+  s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
+  s.lineTo(x + w, y + h - r); s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  s.lineTo(x + r, y + h); s.quadraticCurveTo(x, y + h, x, y + h - r);
+  s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
+  return s;
+}
+// CSS keyframes gh-tiny: 0-70% hidden, 78% peak, 88% 35%, 100% hidden
+function twinkle(phase) {
+  const ease = (a, b, t) => a + (b - a) * (t * t * (3 - 2 * t));
+  if (phase < 0.7) return [0, 0.4];
+  if (phase < 0.78) { const t = (phase - 0.7) / 0.08; return [ease(0, 1, t), ease(0.4, 1, t)]; }
+  if (phase < 0.88) { const t = (phase - 0.78) / 0.1; return [ease(1, 0.35, t), ease(1, 0.7, t)]; }
+  const t = (phase - 0.88) / 0.12;
+  return [ease(0.35, 0, t), ease(0.7, 0.4, t)];
+}
+
+const VIEWS = { front: { yaw: 0, pitch: 0 }, quarter: { yaw: 0.55, pitch: -0.1 }, side: { yaw: 1.38, pitch: -0.05 } };
+const CHAIN_UNIT = 0.1; // one ring + one bar, like .gh-chain's 16px tile
+
+class LadderScene {
+  constructor(mount, params, hooks) {
+    this.mount = mount;
+    this.hooks = hooks;
+    this.params = { ...params };
+    this.reduced = false;
+    this.view = 'quarter';
+    this.insets = { left: 0, right: 0, top: 0, bottom: 0 };
+    this.cam = { yaw: VIEWS.quarter.yaw, pitch: VIEWS.quarter.pitch, dist: 14, y: -3 };
+    this.t = 0;
+    this.last = performance.now();
+    this.frameSkip = 0;
+    this.v = { a: new THREE.Vector3(), b: new THREE.Vector3(), c: new THREE.Vector3(), d: new THREE.Vector3(), e: new THREE.Vector3(), f: new THREE.Vector3(), z: new THREE.Vector3() };
+
+    const renderer = (this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' }));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
+    renderer.setClearColor(0x000000, 0);
+    const cv = renderer.domElement;
+    cv.className = 'block h-full w-full touch-none select-none outline-none';
+    cv.setAttribute('aria-label', 'Interactive 3D chain of seven glass menu plates. Drag a plate to move it.');
+    mount.appendChild(cv);
+
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(30, 1, 0.1, 140);
+    this.buildEnvironment();
+    this.buildLights();
+    this.buildBar();
+    this.buildPlates();
+    this.buildChains();
+    this.buildSparkles();
+
+    this.physics = createLadderPhysics(CANNON, this.physParams(), {
+      onRelease: (i) => this.burst(i),
+      onStatus: (s) => this.hooks.onStatus && this.hooks.onStatus(s),
+    });
+
+    this.ro = new ResizeObserver(() => this.resize());
+    this.ro.observe(mount);
+    this.resize();
+    this.snapCamera();
+    this.bindPointer();
+    this.frame = this.frame.bind(this);
+    this.raf = requestAnimationFrame(this.frame);
+    // Repaint the lettering once Cuprum is really available (the font CSS may arrive late).
+    this.fontDone = false;
+    this.onFonts = () => {
+      if (this.fontDone || !document.fonts || !document.fonts.check('600 64px Cuprum')) return;
+      this.fontDone = true;
+      this.repaintPlates();
+    };
+    if (document.fonts) {
+      document.fonts.addEventListener('loadingdone', this.onFonts);
+      document.fonts.load('600 64px Cuprum').then(this.onFonts, () => {});
+    }
+  }
+
+  physParams() {
+    return { ...this.params, turbulence: this.reduced ? 0 : this.params.turbulence };
+  }
+
+  buildEnvironment() {
+    const pm = new THREE.PMREMGenerator(this.renderer);
+    const env = new THREE.Scene();
+    const add = (geo, color, k, pos, look) => {
+      const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(k), side: THREE.DoubleSide }));
+      m.position.set(...pos);
+      if (look) m.lookAt(0, 0, 0);
+      env.add(m);
+    };
+    add(new THREE.BoxGeometry(24, 16, 24), 0x0c1813, 1, [0, 0, 0]);
+    env.children[0].material.side = THREE.BackSide;
+    add(new THREE.PlaneGeometry(9, 3.2), 0xfff0da, 5.5, [2.5, 6.5, 5.5], true); // warm softbox, high front
+    add(new THREE.PlaneGeometry(2.2, 10), 0xcfe2ff, 3.2, [-8, 1, -3], true); // cool rim strip
+    add(new THREE.PlaneGeometry(7, 1.1), 0xffffff, 2.2, [0, 1.5, 10], true); // front fill
+    const r = prng(7);
+    for (let i = 0; i < 46; i++) add(new THREE.SphereGeometry(0.12, 8, 6), 0xffc46e, 7, [(r() - 0.5) * 20, r() * 7 - 1, -11.5]);
+    const rt = pm.fromScene(env, 0.035);
+    this.scene.environment = rt.texture;
+    this.envRT = rt;
+    env.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); });
+    pm.dispose();
+  }
+
+  buildLights() {
+    const s = this.scene;
+    s.add(new THREE.HemisphereLight(0xd6e7f1, 0x0b1a14, 0.5));
+    const key = (this.key = new THREE.DirectionalLight(0xfff1dd, 2.3));
+    key.position.set(3.2, 4.5, 7);
+    key.castShadow = true;
+    key.shadow.mapSize.set(2048, 2048);
+    key.shadow.bias = -0.0004;
+    key.shadow.normalBias = 0.02;
+    key.shadow.radius = 3;
+    const sc = key.shadow.camera;
+    sc.near = 0.5; sc.far = 30; sc.left = -4; sc.right = 4; sc.top = 3; sc.bottom = -11;
+    s.add(key, key.target);
+    const rim = new THREE.DirectionalLight(0xbcd6ff, 1.7);
+    rim.position.set(-5, 3, -6);
+    s.add(rim);
+    const glow = new THREE.PointLight(0xffc27a, 3, 12, 2);
+    glow.position.set(2.6, -1.5, 3.5);
+    s.add(glow);
+    const catcher = (this.catcher = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.ShadowMaterial({ opacity: 0.3 })));
+    catcher.position.set(0, -4, -2.8);
+    catcher.receiveShadow = true;
+    s.add(catcher);
+  }
+
+  buildBar() {
+    const g = (this.barGroup = new THREE.Group());
+    const metal = (this.metal = new THREE.MeshPhysicalMaterial({ color: 0xcdd4dc, metalness: 1, roughness: 0.3, clearcoat: 0.35, clearcoatRoughness: 0.3 }));
+    this.darkMetal = new THREE.MeshPhysicalMaterial({ color: 0x8e979f, metalness: 1, roughness: 0.38 });
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(BAR.r, BAR.r, BAR.hx * 2, 32), metal);
+    rod.rotation.z = Math.PI / 2;
+    g.add(rod);
+    for (const s of [-1, 1]) {
+      const fin = new THREE.Mesh(new THREE.SphereGeometry(0.078, 24, 16), metal);
+      fin.position.x = s * (BAR.hx + 0.05);
+      g.add(fin);
+      const wire = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 14, 8), this.darkMetal);
+      wire.position.set(s * (BAR.hx - 0.12), 7, 0);
+      g.add(wire);
+      const eye = new THREE.Mesh(new THREE.TorusGeometry(0.03, 0.009, 8, 18), metal);
+      eye.position.set(s * PLATE.ax, BAR.attachY + 0.005, 0);
+      g.add(eye);
+    }
+    g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+    this.scene.add(g);
+  }
+
+  buildPlates() {
+    const shape = roundedShape(SW, SH, RAD);
+    this.rimGeo = new THREE.ExtrudeGeometry(shape, { depth: D - 2 * BT, bevelEnabled: true, bevelThickness: BT, bevelSize: BEV, bevelSegments: 3, curveSegments: 14 });
+    this.rimGeo.translate(0, 0, -(D - 2 * BT) / 2);
+    const face = (this.faceGeo = new THREE.ShapeGeometry(shape, 14));
+    const uv = face.attributes.uv, pos = face.attributes.position;
+    for (let i = 0; i < uv.count; i++) uv.setXY(i, (pos.getX(i) + SW / 2) / SW, (pos.getY(i) + SH / 2) / SH);
+    uv.needsUpdate = true;
+
+    const mask = (this.maskTex = new THREE.CanvasTexture(paintMask()));
+    mask.colorSpace = THREE.NoColorSpace;
+    this.sparkleTex = new THREE.CanvasTexture(paintSparkle());
+    this.sparkleTex.colorSpace = THREE.SRGBColorSpace;
+    const aniso = this.renderer.capabilities.getMaxAnisotropy();
+    this.rimMetal = new THREE.MeshPhysicalMaterial({ color: 0xdbe1e7, metalness: 0.9, roughness: 0.3, clearcoat: 0.4, envMapIntensity: 1.5 });
+    this.fontSize = labelFontSize();
+
+    this.plates = MENU.map((item, k) => {
+      const gc = GLINT_COLORS[k % GLINT_COLORS.length];
+      const group = new THREE.Group();
+      const mk = (canvas) => {
+        const t = new THREE.CanvasTexture(canvas);
+        t.colorSpace = THREE.SRGBColorSpace;
+        t.anisotropy = aniso;
+        return t;
+      };
+      const frontTex = mk(paintPlate(item.label, gc, this.fontSize, false));
+      const backTex = mk(paintPlate(item.label, gc, this.fontSize, true));
+      const faceMat = (map) => new THREE.MeshPhysicalMaterial({
+        map, roughnessMap: mask, metalnessMap: mask, roughness: 1, metalness: 1,
+        clearcoat: 0.85, clearcoatRoughness: 0.2, envMapIntensity: 1.05,
+        polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1,
+      });
+      const rim = new THREE.Mesh(this.rimGeo, this.rimMetal);
+      const front = new THREE.Mesh(face, faceMat(frontTex));
+      front.position.z = D / 2;
+      const back = new THREE.Mesh(face, faceMat(backTex));
+      back.position.z = -D / 2;
+      back.rotation.y = Math.PI;
+      for (const m of [rim, front, back]) { m.castShadow = true; m.receiveShadow = true; m.userData.plate = k; group.add(m); }
+      const glints = makeGlints(fnv1a(item.href)).slice(0, 4).map((g) => {
+        const mat = new THREE.SpriteMaterial({ map: this.sparkleTex, color: new THREE.Color(`rgb(${gc.replace(/ /g, ',')})`), blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0 });
+        const sp = new THREE.Sprite(mat);
+        sp.position.set((g.x / 100 - 0.5) * W, (0.5 - g.y / 100) * H, PLATE.hz + 0.012);
+        sp.userData = { size: (g.kind === 'star' ? 7 : 4.5) / 26 * H * 1.25, dur: g.dur * 1.6, delay: g.delay };
+        sp.renderOrder = 2;
+        group.add(sp);
+        return sp;
+      });
+      this.scene.add(group);
+      return { group, front, back, frontTex, backTex, glints, gc, label: item.label };
+    });
+    this.pickables = this.plates.flatMap((p) => p.group.children.filter((c) => c.isMesh));
+
+    // eyelets where the chains pass through the glass
+    const eyeGeo = new THREE.TorusGeometry(0.03, 0.0085, 8, 18);
+    this.eyelets = new THREE.InstancedMesh(eyeGeo, this.metal, MENU.length * 8);
+    this.eyelets.castShadow = true;
+    this.eyelets.frustumCulled = false;
+    this.eyeOffsets = [];
+    for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const sz of [-1, 1]) this.eyeOffsets.push(new THREE.Matrix4().makeTranslation(sx * PLATE.ax, sy * PLATE.ay, sz * (PLATE.hz + 0.004)));
+    this.scene.add(this.eyelets);
+  }
+
+  repaintPlates() {
+    this.fontSize = labelFontSize();
+    for (const p of this.plates) {
+      p.frontTex.image = paintPlate(p.label, p.gc, this.fontSize, false);
+      p.backTex.image = paintPlate(p.label, p.gc, this.fontSize, true);
+      p.frontTex.needsUpdate = true;
+      p.backTex.needsUpdate = true;
+    }
+  }
+
+  buildChains() {
+    const cap = 14 * 26;
+    const ringGeo = new THREE.TorusGeometry(0.021, 0.0062, 6, 16);
+    ringGeo.scale(1, 1.6, 1);
+    const rodGeo = new THREE.CylinderGeometry(0.0055, 0.0055, CHAIN_UNIT * 0.62, 6);
+    const ringMat = new THREE.MeshPhysicalMaterial({ color: 0xe3e8ee, metalness: 1, roughness: 0.26 });
+    const rodMat = new THREE.MeshPhysicalMaterial({ color: 0xaeb6bf, metalness: 1, roughness: 0.32 });
+    this.rings = new THREE.InstancedMesh(ringGeo, ringMat, cap);
+    this.rods = new THREE.InstancedMesh(rodGeo, rodMat, cap);
+    for (const m of [this.rings, this.rods]) { m.castShadow = true; m.frustumCulled = false; m.count = 0; this.scene.add(m); }
+    this.curve = Array.from({ length: 17 }, () => new THREE.Vector3());
+    this.arc = new Float32Array(17);
+    this.m4 = new THREE.Matrix4();
+  }
+
+  buildSparkles() {
+    this.sparks = [];
+    for (let i = 0; i < 90; i++) {
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: this.sparkleTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0 }));
+      sp.visible = false;
+      sp.renderOrder = 3;
+      sp.userData = { life: 0, max: 1, vel: new THREE.Vector3(), size: 0.1 };
+      this.scene.add(sp);
+      this.sparks.push(sp);
+    }
+    this.sparkCursor = 0;
+  }
+
+  // frost sparkle when a plate snaps out of the roll
+  burst(i) {
+    if (this.reduced) return;
+    const p = this.plates[i], body = this.physics.plates[i].body;
+    p.group.position.copy(body.position);
+    p.group.quaternion.copy(body.quaternion);
+    p.group.updateMatrixWorld(true);
+    const col = new THREE.Color(`rgb(${p.gc.replace(/ /g, ',')})`);
+    for (let n = 0; n < 12; n++) {
+      const sp = this.sparks[this.sparkCursor++ % this.sparks.length];
+      const edge = Math.random() < 0.55 ? -1 : 1;
+      const local = new THREE.Vector3((Math.random() - 0.5) * W, edge * PLATE.hy, (Math.random() < 0.5 ? 1 : -1) * PLATE.hz);
+      sp.position.copy(p.group.localToWorld(local));
+      sp.userData.vel.set((Math.random() - 0.5) * 0.7, edge * (0.25 + Math.random() * 0.5), (Math.random() - 0.3) * 0.6);
+      sp.userData.life = 0;
+      sp.userData.max = 0.55 + Math.random() * 0.45;
+      sp.userData.size = 0.07 + Math.random() * 0.12;
+      sp.material.color.copy(col);
+      sp.visible = true;
+    }
+  }
+
+  bindPointer() {
+    const cv = this.renderer.domElement;
+    this.ray = new THREE.Raycaster();
+    this.ndc = new THREE.Vector2();
+    this.dragPlane = new THREE.Plane();
+    const toNdc = (e) => {
+      const r = cv.getBoundingClientRect();
+      this.ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+      this.ray.setFromCamera(this.ndc, this.camera);
+    };
+    this.onDown = (e) => {
+      if (e.button !== undefined && e.button !== 0) return;
+      toNdc(e);
+      const hit = this.ray.intersectObjects(this.pickables, false)[0];
+      if (!hit) return;
+      e.preventDefault();
+      cv.setPointerCapture(e.pointerId);
+      this.dragId = e.pointerId;
+      const n = this.camera.getWorldDirection(this.v.a).negate();
+      this.dragPlane.setFromNormalAndCoplanarPoint(n, hit.point);
+      this.physics.beginDrag(hit.object.userData.plate, new CANNON.Vec3(hit.point.x, hit.point.y, hit.point.z));
+      cv.style.cursor = 'grabbing';
+    };
+    this.onMove = (e) => {
+      toNdc(e);
+      if (this.dragId === e.pointerId) {
+        const pt = this.ray.ray.intersectPlane(this.dragPlane, this.v.b);
+        if (pt) this.physics.moveDrag(new CANNON.Vec3(pt.x, pt.y, pt.z));
+        return;
+      }
+      if (e.pointerType === 'mouse') cv.style.cursor = this.ray.intersectObjects(this.pickables, false).length ? 'grab' : 'default';
+    };
+    this.onUp = (e) => {
+      if (this.dragId !== e.pointerId) return;
+      this.dragId = null;
+      this.physics.endDrag();
+      cv.style.cursor = 'grab';
+    };
+    cv.addEventListener('pointerdown', this.onDown);
+    cv.addEventListener('pointermove', this.onMove);
+    cv.addEventListener('pointerup', this.onUp);
+    cv.addEventListener('pointercancel', this.onUp);
+    cv.addEventListener('lostpointercapture', this.onUp);
+  }
+
+  // ---- framing -------------------------------------------------------------
+  resize() {
+    const w = Math.max(1, this.mount.clientWidth), h = Math.max(1, this.mount.clientHeight);
+    this.w = w; this.h = h;
+    this.renderer.setSize(w, h, false);
+    this.applyProjection();
+  }
+  // Centre the ladder in the part of the screen the title and drawer leave free,
+  // by rendering a window of a larger virtual image (setViewOffset).
+  applyProjection() {
+    const { w, h } = this;
+    let l = Math.min(this.insets.left, w * 0.45), r = Math.min(this.insets.right, w * 0.6);
+    let t = Math.min(this.insets.top, h * 0.45), b = Math.min(this.insets.bottom, h * 0.6);
+    if (w - l - r < w * 0.3) l = 0;
+    if (h - t - b < h * 0.3) t = 0;
+    const cx = (l + w - r) / 2, cy = (t + h - b) / 2;
+    const fw = cx <= w / 2 ? 2 * (w - cx) : 2 * cx, ox = cx <= w / 2 ? w - 2 * cx : 0;
+    const fh = cy <= h / 2 ? 2 * (h - cy) : 2 * cy, oy = cy <= h / 2 ? h - 2 * cy : 0;
+    this.camera.aspect = fw / fh;
+    if (fw - w > 0.5 || fh - h > 0.5) this.camera.setViewOffset(fw, fh, ox, oy, w, h);
+    else this.camera.clearViewOffset();
+    this.camera.updateProjectionMatrix();
+    this.fit = { hFrac: (h - t - b) / fh, wFrac: (w - l - r) / fh };
+  }
+  framing() {
+    const L = this.params.chainLength;
+    const top = 0.32, bottom = BAR.attachY - MENU.length * (2 * PLATE.ay + L) - 0.06;
+    const half = (top - bottom) / 2;
+    const tan = Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2));
+    const dh = (half * 1.06 + 0.3) / (tan * this.fit.hFrac);
+    const dw = (W / 2 + 0.75) / (tan * this.fit.wFrac);
+    return { y: (top + bottom) / 2, dist: Math.max(dh, dw, 6) };
+  }
+  snapCamera() {
+    const f = this.framing(), v = VIEWS[this.view];
+    Object.assign(this.cam, { yaw: v.yaw, pitch: v.pitch, dist: f.dist, y: f.y });
+    this.placeCamera();
+  }
+  placeCamera() {
+    const { yaw, pitch, dist, y } = this.cam;
+    this.camera.position.set(Math.sin(yaw) * Math.cos(pitch) * dist, y - Math.sin(pitch) * dist, Math.cos(yaw) * Math.cos(pitch) * dist);
+    this.camera.lookAt(0, y, 0);
+    this.key.target.position.set(0, y, 0);
+    this.key.position.set(3.2, y + 5.5, 7);
+    this.catcher.position.y = y;
+  }
+  updateCamera(dt) {
+    const f = this.framing(), v = VIEWS[this.view];
+    const k = this.reduced ? 1 : 1 - Math.exp(-dt * 4.5);
+    this.cam.yaw += (v.yaw - this.cam.yaw) * k;
+    this.cam.pitch += (v.pitch - this.cam.pitch) * k;
+    this.cam.dist += (f.dist - this.cam.dist) * k;
+    this.cam.y += (f.y - this.cam.y) * k;
+    this.placeCamera();
+  }
+
+  // ---- per-frame sync ------------------------------------------------------
+  frame(now) {
+    this.raf = requestAnimationFrame(this.frame);
+    const dt = Math.min(0.1, Math.max(0, (now - this.last) / 1000));
+    this.last = now;
+    this.t += dt;
+    const moved = this.physics.step(dt);
+    const idle = !moved && !this.sparksAlive;
+    // while everything is still, render at ~30 fps (only the glints twinkle)
+    if (idle && (this.frameSkip++ % 2 === 1)) return;
+    this.syncBodies();
+    this.updateChains();
+    this.updateGlints();
+    this.updateSparkles(dt);
+    this.updateCamera(dt);
+    this.renderer.render(this.scene, this.camera);
+  }
+  syncBodies() {
+    const ph = this.physics;
+    this.barGroup.position.copy(ph.bar.interpolatedPosition);
+    this.barGroup.quaternion.copy(ph.bar.interpolatedQuaternion);
+    this.barGroup.updateMatrixWorld(true);
+    this.plates.forEach((p, k) => {
+      const b = ph.plates[k].body;
+      p.group.position.copy(b.interpolatedPosition);
+      p.group.quaternion.copy(b.interpolatedQuaternion);
+      p.group.updateMatrixWorld(true);
+      for (let j = 0; j < 8; j++) {
+        this.m4.multiplyMatrices(p.group.matrixWorld, this.eyeOffsets[j]);
+        this.eyelets.setMatrixAt(k * 8 + j, this.m4);
+      }
+    });
+    this.eyelets.instanceMatrix.needsUpdate = true;
+  }
+  updateChains() {
+    const { a, b, c, d, e, f } = this.v;
+    const curve = this.curve, arc = this.arc, N = curve.length - 1;
+    let ri = 0, di = 0;
+    const place = (mesh, idx, s) => {
+      // find point + tangent at arc length s
+      let j = 1;
+      while (j < N && arc[j] < s) j++;
+      const seg = Math.max(1e-6, arc[j] - arc[j - 1]);
+      const u = Math.min(1, Math.max(0, (s - arc[j - 1]) / seg));
+      c.lerpVectors(curve[j - 1], curve[j], u);
+      d.subVectors(curve[j], curve[j - 1]).normalize(); // tangent (y axis)
+      e.copy(f).addScaledVector(d, -f.dot(d)); // side (x axis), from the upper body's x
+      if (e.lengthSq() < 1e-6) e.set(1, 0, 0);
+      e.normalize();
+      const z = this.v.z.crossVectors(e, d);
+      this.m4.makeBasis(e, d, z);
+      this.m4.setPosition(c);
+      mesh.setMatrixAt(idx, this.m4);
+    };
+    for (const r of this.physics.ropes) {
+      const upper = r.from < 0 ? this.barGroup : this.plates[r.from].group;
+      const lower = this.plates[r.to].group;
+      a.set(r.c.pivotA.x, r.c.pivotA.y, r.c.pivotA.z); upper.localToWorld(a);
+      b.set(r.c.pivotB.x, r.c.pivotB.y, r.c.pivotB.z); lower.localToWorld(b);
+      f.set(1, 0, 0).applyQuaternion(upper.quaternion);
+      const len = r.c.length;
+      const dist = a.distanceTo(b);
+      // slack chain: sag it as a parabola with the chain's real length
+      const sag = dist < len ? Math.min(len * 0.5, Math.sqrt((3 * dist * (len - dist)) / 8)) : 0;
+      c.subVectors(b, a).normalize();
+      d.set(0, -1, 0).addScaledVector(c, c.y); // gravity, minus its part along the chord
+      if (d.lengthSq() < 0.04) d.set(0, 0, 1).applyQuaternion(upper.quaternion).multiplyScalar(0.6).add(d);
+      d.normalize();
+      e.addVectors(a, b).multiplyScalar(0.5).addScaledVector(d, sag * 2); // bezier control
+      arc[0] = 0;
+      for (let i = 0; i <= N; i++) {
+        const t = i / N, it = 1 - t;
+        curve[i].set(0, 0, 0).addScaledVector(a, it * it).addScaledVector(e, 2 * it * t).addScaledVector(b, t * t);
+        if (i > 0) arc[i] = arc[i - 1] + curve[i].distanceTo(curve[i - 1]);
+      }
+      const total = arc[N];
+      const n = Math.max(1, Math.round(total / CHAIN_UNIT));
+      const step = total / n;
+      for (let i = 0; i <= n && ri < this.rings.instanceMatrix.count; i++) place(this.rings, ri++, i * step);
+      for (let i = 0; i < n && di < this.rods.instanceMatrix.count; i++) place(this.rods, di++, (i + 0.5) * step);
+    }
+    this.rings.count = ri; this.rods.count = di;
+    this.rings.instanceMatrix.needsUpdate = true;
+    this.rods.instanceMatrix.needsUpdate = true;
+  }
+  updateGlints() {
+    for (const p of this.plates) {
+      for (const sp of p.glints) {
+        const { size, dur, delay } = sp.userData;
+        let o, s;
+        if (this.reduced) { o = 0.55; s = 0.8; }
+        else {
+          const ph = (((this.t - delay) % dur) + dur) % dur / dur;
+          [o, s] = twinkle(ph);
+          o *= 0.95;
+        }
+        sp.material.opacity = o;
+        sp.visible = o > 0.01;
+        sp.scale.setScalar(size * s);
+      }
+    }
+  }
+  updateSparkles(dt) {
+    let alive = false;
+    for (const sp of this.sparks) {
+      if (!sp.visible) continue;
+      const u = sp.userData;
+      u.life += dt;
+      const k = u.life / u.max;
+      if (k >= 1) { sp.visible = false; continue; }
+      alive = true;
+      sp.position.addScaledVector(u.vel, dt);
+      u.vel.multiplyScalar(Math.exp(-dt * 2.5));
+      sp.material.opacity = Math.sin(Math.PI * Math.min(1, k * 1.4)) * 0.95;
+      sp.scale.setScalar(u.size * (0.5 + 0.8 * Math.sin(Math.PI * k)));
+    }
+    this.sparksAlive = alive;
+  }
+
+  // ---- API used by React -----------------------------------------------------
+  setParams(p) { this.params = { ...p }; this.physics.setParams(this.physParams()); }
+  setView(v) { this.view = v; if (this.reduced) this.snapCamera(); }
+  setInsets(insets) { this.insets = { ...insets }; this.applyProjection(); }
+  setReducedMotion(r) { this.reduced = r; this.physics.setParams(this.physParams()); }
+  unroll() { this.physics.open(this.reduced); }
+  reroll() { this.physics.reroll(); }
+  gust() { if (!this.reduced) this.physics.gust(); }
+
+  dispose() {
+    cancelAnimationFrame(this.raf);
+    this.ro.disconnect();
+    if (document.fonts) document.fonts.removeEventListener('loadingdone', this.onFonts);
+    const cv = this.renderer.domElement;
+    cv.removeEventListener('pointerdown', this.onDown);
+    cv.removeEventListener('pointermove', this.onMove);
+    cv.removeEventListener('pointerup', this.onUp);
+    cv.removeEventListener('pointercancel', this.onUp);
+    cv.removeEventListener('lostpointercapture', this.onUp);
+    this.physics.destroy();
+    const seen = new Set();
+    const drop = (x) => { if (x && !seen.has(x)) { seen.add(x); x.dispose(); } };
+    this.scene.traverse((o) => {
+      drop(o.geometry);
+      const mats = Array.isArray(o.material) ? o.material : [o.material];
+      for (const m of mats) {
+        if (!m) continue;
+        for (const key of ['map', 'roughnessMap', 'metalnessMap']) drop(m[key]);
+        drop(m);
+      }
+    });
+    drop(this.envRT);
+    this.renderer.dispose();
+    this.renderer.forceContextLoss();
+    cv.remove();
+  }
+}
+
+// ---------- React UI --------------------------------------------------------
+const STATUS_TEXT = (s, wind) => {
+  if (s.state === 'rolled') return s.sleeping || !wind ? 'Rolled up' : 'Rolled up · swaying';
+  if (s.state === 'unrolling') return `Unrolling · ${s.released} of ${MENU.length}`;
+  if (s.state === 'swinging') return wind ? 'Swaying in the wind' : 'Swinging';
+  return 'Still · physics paused';
+};
+
+function Slider({ def, value, onChange }) {
+  const raw = def.invert ? -value : value;
+  const pct = ((raw - def.min) / (def.max - def.min)) * 100;
+  const id = `s-${def.key}`;
+  return html`
+    <div className="grid gap-1.5">
+      <div className="flex items-baseline justify-between gap-3">
+        <label htmlFor=${id} className="font-label text-[12px] font-semibold uppercase tracking-[0.08em] text-ivory">${def.label}</label>
+        <output htmlFor=${id} className="font-label text-[13px] tabular-nums text-brass">${def.fmt(value)}</output>
+      </div>
+      <input id=${id} type="range" min=${def.min} max=${def.max} step=${def.step} value=${raw}
+        style=${{ '--fill': `${pct}%` }}
+        aria-describedby=${`${id}-hint`}
+        onInput=${(e) => { const v = Number(e.target.value); onChange(def.key, def.invert ? -v : v); }}
+        onChange=${() => {}} />
+      <p id=${`${id}-hint`} className="font-body text-[11.5px] leading-snug text-muted">${def.hint}</p>
+    </div>`;
+}
+
+function Icon({ d, className = 'h-4 w-4' }) {
+  return html`<svg viewBox="0 0 24 24" className=${className} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">${d.map((p) => html`<path d=${p} key=${p} />`)}</svg>`;
+}
+const ICONS = {
+  unroll: ['M12 3v12', 'M7 10l5 5 5-5', 'M5 21h14'],
+  reroll: ['M4 12a8 8 0 1 0 2.4-5.7', 'M4 4v4.5h4.5'],
+  wind: ['M3 8h11a3 3 0 1 0-3-3', 'M3 12h16a3 3 0 1 1-3 3', 'M3 16h7'],
+  sliders: ['M4 6h10', 'M18 6h2', 'M4 12h4', 'M12 12h8', 'M4 18h12', 'M20 18h0', 'M16 4v4', 'M10 10v4', 'M18 16v4'],
+  close: ['M6 6l12 12', 'M18 6L6 18'],
+};
+
+function App() {
+  const saved = useRef(loadSaved()).current;
+  const mountRef = useRef(null);
+  const drawerRef = useRef(null);
+  const headerRef = useRef(null);
+  const simRef = useRef(null);
+  const [params, setParams] = useState(saved ? saved.params : DEFAULTS);
+  const [view, setView] = useState(saved ? saved.view : 'quarter');
+  const [drawer, setDrawer] = useState(() => window.innerWidth >= 768);
+  const [status, setStatus] = useState({ state: 'rolled', sleeping: false, released: 0 });
+  const [reduced, setReduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [copied, setCopied] = useState('');
+  const [copyText, setCopyText] = useState('');
+
+  useEffect(() => {
+    const sim = new LadderScene(mountRef.current, params, { onStatus: (s) => setStatus({ ...s }) });
+    simRef.current = sim;
+    sim.setReducedMotion(reduced);
+    sim.setView(view);
+    sim.snapCamera();
+    const t = setTimeout(() => sim.unroll(), 1100); // play once on load
+    return () => { clearTimeout(t); sim.dispose(); simRef.current = null; };
+  }, []);
+  useEffect(() => { simRef.current && simRef.current.setParams(params); save(params, view); }, [params]);
+  useEffect(() => { simRef.current && simRef.current.setView(view); save(params, view); }, [view]);
+  useEffect(() => { simRef.current && simRef.current.setReducedMotion(reduced); }, [reduced]);
+
+  // keep the ladder centred in the space the drawer leaves free
+  useEffect(() => {
+    const el = drawerRef.current, hd = headerRef.current;
+    const apply = () => {
+      const sim = simRef.current;
+      if (!sim) return;
+      const W0 = window.innerWidth, H0 = window.innerHeight;
+      const wide = window.matchMedia('(min-width: 768px)').matches;
+      const dr = drawer && el ? el.getBoundingClientRect() : null;
+      const hr = hd ? hd.getBoundingClientRect() : null;
+      const right = wide && dr ? W0 - dr.left : 0;
+      const bottom = !wide && dr ? H0 - dr.top : 0;
+      sim.setInsets({
+        left: wide && hr ? hr.right + 8 : 0,
+        top: !wide && hr ? hr.bottom + 4 : 0,
+        right, bottom,
+      });
+    };
+    apply();
+    const ro = new ResizeObserver(apply);
+    if (el) ro.observe(el);
+    if (hd) ro.observe(hd);
+    window.addEventListener('resize', apply);
+    return () => { ro.disconnect(); window.removeEventListener('resize', apply); };
+  }, [drawer]);
+
+  const act = useCallback((what) => {
+    const sim = simRef.current;
+    if (!sim) return;
+    if (what === 'unroll') sim.unroll();
+    if (what === 'reroll') sim.reroll();
+    if (what === 'gust') sim.gust();
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const tag = (e.target && e.target.tagName) || '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      const k = e.key.toLowerCase();
+      if (k === 'u') act('unroll');
+      else if (k === 'r') act('reroll');
+      else if (k === 'g') act('gust');
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [act]);
+
+  const setOne = (key, v) => setParams((p) => ({ ...p, [key]: v }));
+  const settingsJson = () => JSON.stringify({ ...params, camera: view, reducedMotion: reduced, internal: { ...TUNE } }, null, 2);
+  const copy = async () => {
+    const text = settingsJson();
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyText(''); setCopied('Settings copied');
+    } catch {
+      setCopyText(text); setCopied('Copy blocked here. Select the text below and copy it.');
+    }
+    setTimeout(() => setCopied(''), 2600);
+  };
+
+  const wind = params.turbulence > 0 && !reduced;
+  const moving = !status.sleeping && status.state !== 'settled';
+  const canUnroll = status.state === 'rolled';
+
+  const btn = 'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-[10px] px-2 py-2 font-label text-[13px] font-semibold uppercase tracking-[0.07em] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-winter disabled:cursor-not-allowed disabled:opacity-40';
+  const kbd = 'ml-0.5 rounded border border-line px-1 font-label text-[10px] font-medium leading-4 tracking-normal opacity-70';
+
+  return html`
+    <div className="relative h-full w-full overflow-hidden">
+      <div ref=${mountRef} className="absolute inset-0" />
+
+      <header ref=${headerRef} className="pointer-events-none absolute left-0 top-0 z-10 grid max-w-[30rem] gap-2 md:max-w-[17.5rem] lg:max-w-[19rem] pt-[max(16px,env(safe-area-inset-top))] pl-[max(16px,env(safe-area-inset-left))] pr-4 md:pl-[max(28px,env(safe-area-inset-left))] md:pt-7">
+        <p className="font-label text-[11px] font-semibold uppercase tracking-[0.16em] text-winter/80">Noble Star Forest · drop-down animations</p>
+        <h1 className="font-display text-[30px] font-semibold leading-none text-ivory md:text-[38px]">Plate Chain Unroll</h1>
+        <p className="font-body text-[13px] leading-snug text-muted">Seven header plates, rolled up like a carpet. Drag any plate to grab it and fling it.</p>
+        <div className="mt-1 flex">
+          <span role="status" aria-live="polite" className="inline-flex items-center gap-2 rounded-full border border-line bg-panel px-3 py-1 font-label text-[12px] font-semibold uppercase tracking-[0.08em] text-ivory backdrop-blur">
+            <span className=${`h-2 w-2 rounded-full ${moving ? 'bg-brass' : 'bg-evergreen-bright'}`} aria-hidden="true" />
+            ${STATUS_TEXT(status, wind)}
+          </span>
+        </div>
+      </header>
+
+      ${!drawer && html`
+        <button type="button" onClick=${() => setDrawer(true)}
+          className=${`${btn} absolute z-20 border border-line bg-panel text-ivory shadow-xl backdrop-blur hover:bg-panel-strong bottom-[max(16px,env(safe-area-inset-bottom))] right-[max(16px,env(safe-area-inset-right))]`}>
+          <${Icon} d=${ICONS.sliders} /> Tuning
+        </button>`}
+
+      ${drawer && html`
+        <aside ref=${drawerRef} aria-label="Physics tuning"
+          className="absolute z-20 flex flex-col overflow-hidden border border-line bg-panel shadow-2xl backdrop-blur-xl
+            inset-x-0 bottom-0 max-h-[52%] rounded-t-[18px] pb-[env(safe-area-inset-bottom)]
+            md:inset-x-auto md:bottom-auto md:right-[max(16px,env(safe-area-inset-right))] md:top-4 md:max-h-[calc(100%-32px)] md:w-[340px] md:rounded-[18px] md:pb-0">
+          <div className="flex items-center justify-between gap-3 border-b border-line px-[max(16px,env(safe-area-inset-left))] py-3 md:px-5">
+            <div>
+              <h2 className="font-display text-[22px] font-semibold leading-none text-ivory">Tuning</h2>
+              <p className="mt-1 font-body text-[11.5px] text-muted">Every slider applies live.</p>
+            </div>
+            <button type="button" onClick=${() => setDrawer(false)} aria-label="Hide tuning panel"
+              className="grid h-9 w-9 place-items-center rounded-full border border-line text-ivory hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-winter">
+              <${Icon} d=${ICONS.close} />
+            </button>
+          </div>
+
+          <div className="grid gap-5 overflow-y-auto px-[max(16px,env(safe-area-inset-left))] py-4 md:px-5">
+            <div className="grid grid-cols-3 gap-2">
+              <button type="button" className=${`${btn} bg-brass text-night hover:bg-[#f3e4c3]`} disabled=${!canUnroll} onClick=${() => act('unroll')}>
+                <${Icon} d=${ICONS.unroll} /> Unroll
+              </button>
+              <button type="button" className=${`${btn} border border-line text-ivory hover:bg-white/10`} onClick=${() => act('reroll')}>
+                <${Icon} d=${ICONS.reroll} /> Re-roll
+              </button>
+              <button type="button" className=${`${btn} border border-line text-ivory hover:bg-white/10`} disabled=${reduced} onClick=${() => act('gust')}>
+                <${Icon} d=${ICONS.wind} /> Gust
+              </button>
+            </div>
+            <p className="-mt-3 font-body text-[11.5px] leading-snug text-muted">Re-roll is a placeholder close: it snaps back into the roll instantly. Keys: <kbd className=${kbd}>U</kbd> unroll, <kbd className=${kbd}>R</kbd> re-roll, <kbd className=${kbd}>G</kbd> gust.</p>
+
+            <fieldset className="grid gap-2">
+              <legend className="mb-2 font-label text-[12px] font-semibold uppercase tracking-[0.08em] text-ivory">Camera</legend>
+              <div className="grid grid-cols-3 rounded-[10px] border border-line p-1" role="radiogroup" aria-label="Camera angle">
+                ${[['front', 'Front'], ['quarter', '¾ view'], ['side', 'Side']].map(([k, label]) => html`
+                  <button key=${k} type="button" role="radio" aria-checked=${view === k} onClick=${() => setView(k)}
+                    className=${`rounded-[7px] px-2 py-1.5 font-label text-[12.5px] font-semibold uppercase tracking-[0.06em] focus-visible:outline focus-visible:outline-2 focus-visible:outline-winter ${view === k ? 'bg-winter text-night' : 'text-ivory hover:bg-white/10'}`}>${label}</button>`)}
+              </div>
+            </fieldset>
+
+            ${SLIDERS.map((def) => html`<${Slider} key=${def.key} def=${def} value=${params[def.key]} onChange=${setOne} />`)}
+
+            <label className="flex items-start gap-3 rounded-[10px] border border-line p-3">
+              <input type="checkbox" id="reduced" className="mt-0.5 h-4 w-4 accent-[#e9d7b0]" checked=${reduced} onChange=${(e) => setReduced(e.target.checked)} />
+              <span className="grid gap-0.5">
+                <span className="font-label text-[12px] font-semibold uppercase tracking-[0.08em] text-ivory">Reduced motion</span>
+                <span className="font-body text-[11.5px] leading-snug text-muted">Plates appear already hanging, with no swing, gusts or twinkle. Starts on when your device asks for less motion.</span>
+              </span>
+            </label>
+
+            <div className="grid gap-2 border-t border-line pt-4">
+              <div className="grid grid-cols-2 gap-2">
+                <button type="button" className=${`${btn} border border-line text-ivory hover:bg-white/10`} onClick=${copy}>Copy settings</button>
+                <button type="button" className=${`${btn} border border-line text-ivory hover:bg-white/10`} onClick=${() => setParams({ ...DEFAULTS })}>Restore defaults</button>
+              </div>
+              <p className="font-body text-[11.5px] leading-snug text-muted" aria-live="polite">${copied || 'Paste copied settings into the chat to lock them in for the next tuning round.'}</p>
+              ${copyText && html`<textarea readOnly className="h-32 w-full rounded-[8px] border border-line bg-night/60 p-2 font-mono text-[11px] text-ivory" value=${copyText} onFocus=${(e) => e.target.select()} />`}
+            </div>
+          </div>
+        </aside>`}
+    </div>`;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(html`<${App} />`);
+</script>
